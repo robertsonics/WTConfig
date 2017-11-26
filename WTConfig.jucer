@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="CpobiR" name="WTConfig" displaySplashScreen="0" reportAppUsage="0"
+              splashScreenColour="Dark" projectType="guiapp" version="2.0.0"
+              bundleIdentifier="com.robertsonics.wtconfig" includeBinaryInAppConfig="1"
+              cppLanguageStandard="11" jucerVersion="5.2.0" companyName="robertsonics"
+              companyCopyright="robertsonics">
+  <MAINGROUP id="Jb1mnf" name="WTConfig">
+    <GROUP id="{A0F8BFB7-00FA-BBBA-084A-2623E20403E9}" name="Source">
+      <FILE id="Q6tmPm" name="AudioSettings.cpp" compile="1" resource="0"
+            file="Source/AudioSettings.cpp"/>
+      <FILE id="bT9XQL" name="AudioSettings.h" compile="0" resource="0" file="Source/AudioSettings.h"/>
+      <FILE id="iOUUJE" name="Commands.h" compile="0" resource="0" file="Source/Commands.h"/>
+      <FILE id="pm0D6u" name="Communicator.cpp" compile="1" resource="0"
+            file="Source/Communicator.cpp"/>
+      <FILE id="qv3HTd" name="Communicator.h" compile="0" resource="0" file="Source/Communicator.h"/>
+      <FILE id="z77eod" name="config.h" compile="0" resource="0" file="Source/config.h"/>
+      <FILE id="jEwhsr" name="HelpComponent.h" compile="0" resource="0" file="Source/HelpComponent.h"/>
+      <FILE id="spqNNC" name="linux_Serial.cpp" compile="1" resource="0"
+            file="Source/linux_Serial.cpp"/>
+      <FILE id="Tstol7" name="mac_Serial.cpp" compile="1" resource="0" file="Source/mac_Serial.cpp"/>
+      <FILE id="mMx0Sm" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="hpTlHj" name="MainComponent.cpp" compile="1" resource="0"
+            file="Source/MainComponent.cpp"/>
+      <FILE id="hcAZaM" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="wxpZBG" name="MidiSettings.cpp" compile="1" resource="0"
+            file="Source/MidiSettings.cpp"/>
+      <FILE id="AY4FPl" name="MidiSettings.h" compile="0" resource="0" file="Source/MidiSettings.h"/>
+      <FILE id="r6OB45" name="OutputComponent.cpp" compile="1" resource="0"
+            file="Source/OutputComponent.cpp"/>
+      <FILE id="Qdb8l2" name="OutputComponent.h" compile="0" resource="0"
+            file="Source/OutputComponent.h"/>
+      <FILE id="J51kkK" name="RemoteControl.cpp" compile="1" resource="0"
+            file="Source/RemoteControl.cpp"/>
+      <FILE id="LgODtp" name="RemoteControl.h" compile="0" resource="0" file="Source/RemoteControl.h"/>
+      <FILE id="beLQ9C" name="Serial.h" compile="0" resource="0" file="Source/Serial.h"/>
+      <FILE id="UUGT5i" name="TriggerSettings.cpp" compile="1" resource="0"
+            file="Source/TriggerSettings.cpp"/>
+      <FILE id="jwr35s" name="TriggerSettings.h" compile="0" resource="0"
+            file="Source/TriggerSettings.h"/>
+      <FILE id="q02Okl" name="Tsunami3_256.png" compile="0" resource="1"
+            file="Source/Tsunami3_256.png"/>
+      <FILE id="C9mWBs" name="win32_Serial.cpp" compile="1" resource="0"
+            file="Source/win32_Serial.cpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <XCODE_MAC targetFolder="Builds/MacOSX" enableGNUExtensions="0" smallIcon="q02Okl"
+               bigIcon="q02Okl">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="WTConfig"
+                       enablePluginBinaryCopyStep="1" osxCompatibility="10.6 SDK"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="WTConfig"
+                       enablePluginBinaryCopyStep="1" osxCompatibility="10.6 SDK"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../../../JUCE/modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+    <VS2015 targetFolder="Builds/VisualStudio2015" externalLibraries="Setupapi.lib"
+            windowsTargetPlatformVersion="8.1" smallIcon="q02Okl" bigIcon="q02Okl">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
+                       isDebug="1" optimisation="1" targetName="WTConfig" debugInformationFormat="ProgramDatabase"
+                       enablePluginBinaryCopyStep="0"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="x64"
+                       isDebug="0" optimisation="3" targetName="WTConfig" debugInformationFormat="ProgramDatabase"
+                       enablePluginBinaryCopyStep="0" linkTimeOptimisation="1"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../../../JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2015>
+    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" smallIcon="q02Okl" bigIcon="q02Okl">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="WTConfig"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="WTConfig"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_gui_extra" path="../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../../../JUCE/modules"/>
+      </MODULEPATHS>
+    </LINUX_MAKE>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+  <JUCEOPTIONS/>
+</JUCERPROJECT>

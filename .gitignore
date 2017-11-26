@@ -1,0 +1,12 @@
+# Ignored files
+*.bak
+*.ncb
+*.suo
+*.aps
+*.user
+WTConfig.VC.db
+[Dd]ebug
+[Rr]elease
+[Xx]64
+
+
