@@ -63,6 +63,7 @@ public:
 	int getFirstValue(int n);
 
 	bool setSerialBaud(int baud);
+	bool setQwiicAddress(int add);
 	bool setMidiPitch(int pitch);
 	bool setMidiChannel(int chan);
 	bool setMidiRelease(int release);

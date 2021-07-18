@@ -305,8 +305,6 @@ TriggerSettings::TriggerSettings ()
 	functionBox->addItem("Trig Bank Up", 12);
 	functionBox->addItem("Trig Bank Dn", 13);
 	functionBox->addItem("Synced Set", 14);
-	functionBox->addItem("Enc Vol1", 15);
-	functionBox->addItem("Enc Pitch1", 16);
 
 	outputBox->addItem("1", 1);
 	outputBox->addItem("2", 2);
@@ -316,6 +314,8 @@ TriggerSettings::TriggerSettings ()
 	outputBox->addItem("6", 6);
 	outputBox->addItem("7", 7);
 	outputBox->addItem("8", 8);
+	outputBox->addItem("All", 9);
+	outputBox->setItemEnabled(9, false);
 
 	lowText->setInputRestrictions(4, "0123456789");
 	highText->setInputRestrictions(4, "0123456789");
@@ -516,6 +516,7 @@ void TriggerSettings::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 
 		switch (functionBox->getSelectedId()) {
 			case 1: // Normal
+				outputBox->setItemEnabled(9, false);
 				lowText->setText("", dontSendNotification);
 				highText->setText("", dontSendNotification);
 				polyToggle->setToggleState(true, dontSendNotification);
@@ -536,6 +537,7 @@ void TriggerSettings::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 			case 2: // Next
 			case 3: // Previous
 			case 4: // Random
+				outputBox->setItemEnabled(9, false);
 				lowText->setText("1", dontSendNotification);
 				highText->setText("16", dontSendNotification);
 				polyToggle->setToggleState(true, dontSendNotification);
@@ -555,6 +557,7 @@ void TriggerSettings::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 				break;
 			case 5:	// Pause
 			case 6: // Resume
+				outputBox->setItemEnabled(9, false);
 				lowText->setText("1", dontSendNotification);
 				highText->setText("16", dontSendNotification);
 				polyToggle->setToggleState(false, dontSendNotification);
@@ -566,6 +569,7 @@ void TriggerSettings::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 				retriggerToggle->setToggleState(false, dontSendNotification);
 				break;
 			case 7:	// Stop
+				outputBox->setItemEnabled(9, false);
 				lowText->setText("1", dontSendNotification);
 				highText->setText("16", dontSendNotification);
 				polyToggle->setToggleState(false, dontSendNotification);
@@ -577,6 +581,8 @@ void TriggerSettings::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 				break;
 			case 8:	// Volume Up
 			case 9: // Volume Down
+				if (m_mode != MODE_WAV_TRIGGER)
+					outputBox->setItemEnabled(9, true);
 				lowText->setText("", dontSendNotification);
 				highText->setText("", dontSendNotification);
 				polyToggle->setToggleState(false, dontSendNotification);
@@ -590,6 +596,7 @@ void TriggerSettings::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 			case 11: // MIDI Bank dn
 			case 12: // Trigger Bank up
 			case 13: // Trigger Bank dn
+				outputBox->setItemEnabled(9, false);
 				lowText->setText("", dontSendNotification);
 				highText->setText("", dontSendNotification);
 				polyToggle->setToggleState(false, dontSendNotification);
@@ -600,6 +607,7 @@ void TriggerSettings::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 				retriggerToggle->setToggleState(false, dontSendNotification);
 				break;
 			case 14: // Synced Set
+				outputBox->setItemEnabled(9, false);
 				lowText->setText("1", dontSendNotification);
 				highText->setText("8", dontSendNotification);
 				polyToggle->setToggleState(true, dontSendNotification);
@@ -824,6 +832,7 @@ void TriggerSettings::setMode(int mode) {
 			outputBox->setItemEnabled(6, false);
 			outputBox->setItemEnabled(7, false);
 			outputBox->setItemEnabled(8, false);
+			outputBox->setItemEnabled(9, false);
 			functionBox->setItemEnabled(14, false);
 			break;
 
@@ -837,6 +846,7 @@ void TriggerSettings::setMode(int mode) {
 			outputBox->setItemEnabled(6, false);
 			outputBox->setItemEnabled(7, false);
 			outputBox->setItemEnabled(8, false);
+			outputBox->setItemEnabled(9, true);
 			functionBox->setItemEnabled(14, false);
 			break;
 
@@ -850,6 +860,7 @@ void TriggerSettings::setMode(int mode) {
 			outputBox->setItemEnabled(6, true);
 			outputBox->setItemEnabled(7, true);
 			outputBox->setItemEnabled(8, true);
+			outputBox->setItemEnabled(9, true);
 			functionBox->setItemEnabled(14, true);
 			break;
 	}

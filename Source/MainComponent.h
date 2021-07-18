@@ -54,6 +54,8 @@ public:
 
 	bool setBaud(int baud);
 	int getBaud(void);
+	bool setQwiic(int add);
+	int getQwiic(void);
 	void setMode(int mode);
 
     //[/UserMethods]
@@ -96,6 +98,8 @@ private:
     ScopedPointer<Label> label5;
     ScopedPointer<TextButton> stopAllButton;
     ScopedPointer<Label> label6;
+    ScopedPointer<Label> label7;
+    ScopedPointer<ComboBox> qwiicBox;
 
 
     //==============================================================================

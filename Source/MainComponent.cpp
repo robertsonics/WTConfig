@@ -33,7 +33,7 @@ MainContentComponent::MainContentComponent ()
     //[/Constructor_pre]
 
     addAndMakeVisible (groupComponent = new GroupComponent ("new group",
-                                                            TRANS("Serial Com - Optional")));
+                                                            TRANS("Remote Control - Optional")));
 
     addAndMakeVisible (tabbedComponent = new TabbedComponent (TabbedButtonBar::TabsAtTop));
     tabbedComponent->setTabBarDepth (30);
@@ -120,7 +120,7 @@ MainContentComponent::MainContentComponent ()
     label4->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (label5 = new Label ("new label",
-                                           TRANS("v2.00 beta2")));
+                                           TRANS("v2.10")));
     label5->setFont (Font (18.00f, Font::plain).withTypefaceStyle ("Regular"));
     label5->setJustificationType (Justification::centredLeft);
     label5->setEditable (false, false, false);
@@ -141,6 +141,22 @@ MainContentComponent::MainContentComponent ()
     label6->setColour (Label::textColourId, Colour (0xff6e50f3));
     label6->setColour (TextEditor::textColourId, Colours::black);
     label6->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (label7 = new Label ("new label",
+                                           TRANS("Qwiic Address")));
+    label7->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
+    label7->setJustificationType (Justification::centredLeft);
+    label7->setEditable (false, false, false);
+    label7->setColour (TextEditor::textColourId, Colours::black);
+    label7->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (qwiicBox = new ComboBox ("baud combo box"));
+    qwiicBox->setTooltip (TRANS("This is the address assigned to Tsunami for the Qwiic bus"));
+    qwiicBox->setEditableText (false);
+    qwiicBox->setJustificationType (Justification::centredLeft);
+    qwiicBox->setTextWhenNothingSelected (String());
+    qwiicBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
+    qwiicBox->addListener (this);
 
 
     //[UserPreSize]
@@ -194,6 +210,11 @@ MainContentComponent::MainContentComponent ()
 	testBaudBox->addItem("38.4 kbps", 5);
 	testBaudBox->addItem("57.6 kbps", 6);
 	testBaudBox->setSelectedId(6);
+
+	for (int a = 0; a < 128; a++) {
+		qwiicBox->addItem(String(a), a + 1);
+	}
+	qwiicBox->setSelectedId(20);
 
 	pCom = new Communicator();
 
@@ -273,12 +294,15 @@ MainContentComponent::MainContentComponent ()
 				case MODE_WAV_TRIGGER:
 					midiSettings->disable();
 					baudBox->setItemEnabled(7, true);
+					qwiicBox->setEnabled(false);
 					break;
 				case MODE_TSUNAMI_STEREO:
 					baudBox->setItemEnabled(7, false);
+					qwiicBox->setEnabled(true);
 					break;
 				case MODE_TSUNAMI_MONO:
 					baudBox->setItemEnabled(7, false);
+					qwiicBox->setEnabled(true);
 					break;
 				}
 			}
@@ -321,6 +345,8 @@ MainContentComponent::~MainContentComponent()
     label5 = nullptr;
     stopAllButton = nullptr;
     label6 = nullptr;
+    label7 = nullptr;
+    qwiicBox = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -347,18 +373,20 @@ void MainContentComponent::resized()
     groupComponent->setBounds (25, 176, 284, 159);
     tabbedComponent->setBounds (getWidth() - 25 - 642, 20, 642, 316);
     Output->setBounds (getWidth() - 25 - 642, 20 + 316 - -16, 642, 296);
-    modeBox->setBounds (120, 80, 161, 24);
+    modeBox->setBounds (120, 62, 161, 24);
     helpWindow->setBounds (27, 20 + 316 - -16, 280, 278);
-    label->setBounds (56, 80, 63, 24);
-    portBox->setBounds (88, 211, 192, 24);
-    label2->setBounds (43, 211, 40, 24);
-    baudBox->setBounds (171, 120, 110, 24);
-    label3->setBounds (96, 120, 72, 24);
-    testBaudBox->setBounds (170, 251, 110, 24);
-    label4->setBounds (96, 251, 72, 24);
+    label->setBounds (56, 62, 63, 24);
+    portBox->setBounds (88, 217, 192, 24);
+    label2->setBounds (43, 217, 40, 24);
+    baudBox->setBounds (171, 97, 110, 24);
+    label3->setBounds (96, 97, 72, 24);
+    testBaudBox->setBounds (170, 253, 110, 24);
+    label4->setBounds (96, 253, 72, 24);
     label5->setBounds (22, 36, 106, 24);
-    stopAllButton->setBounds (56, 291, 80, 24);
+    stopAllButton->setBounds (55, 294, 80, 24);
     label6->setBounds (21, 14, 288, 24);
+    label7->setBounds (105, 131, 104, 24);
+    qwiicBox->setBounds (210, 132, 70, 24);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -390,23 +418,29 @@ void MainContentComponent::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 			audioSettings->setMode(m_mode);
 			audioSettings->reset();
 			pCom->setMode(m_mode);
+			baudBox->setSelectedId(6);
+			qwiicBox->setSelectedId(20);
+
 			switch (m_mode) {
-			case MODE_WAV_TRIGGER:
-				midiSettings->disable();
-				baudBox->setItemEnabled(7, true);
-				AlertWindow::showMessageBoxAsync(AlertWindow::InfoIcon, "Mode Changed to WAV Trigger",
-					"Make sure you're running the WAV Trigger firmware when using this init file.");
-				break;
-			case MODE_TSUNAMI_STEREO:
-				baudBox->setItemEnabled(7, false);
-				AlertWindow::showMessageBoxAsync(AlertWindow::InfoIcon, "Mode Changed to Tsunami Stereo",
-					"Make sure you're running the Tsunami stereo firmware version when using this init file.");
-				break;
-			case MODE_TSUNAMI_MONO:
-				baudBox->setItemEnabled(7, false);
-				AlertWindow::showMessageBoxAsync(AlertWindow::InfoIcon, "Mode Changed to Tsunami Mono",
-					"Make sure you're running the Tsunami mono firmware version when using this init file.");
-				break;
+				case MODE_WAV_TRIGGER:
+					midiSettings->disable();
+					baudBox->setItemEnabled(7, true);
+					qwiicBox->setEnabled(false);
+					AlertWindow::showMessageBoxAsync(AlertWindow::InfoIcon, "Mode Changed to WAV Trigger",
+						"Make sure you're running the WAV Trigger firmware when using this init file.");
+					break;
+				case MODE_TSUNAMI_STEREO:
+					baudBox->setItemEnabled(7, false);
+					qwiicBox->setEnabled(true);
+					AlertWindow::showMessageBoxAsync(AlertWindow::InfoIcon, "Mode Changed to Tsunami Stereo",
+						"Make sure you're running the Tsunami stereo firmware version when using this init file.");
+					break;
+				case MODE_TSUNAMI_MONO:
+					baudBox->setItemEnabled(7, false);
+					qwiicBox->setEnabled(true);
+					AlertWindow::showMessageBoxAsync(AlertWindow::InfoIcon, "Mode Changed to Tsunami Mono",
+						"Make sure you're running the Tsunami mono firmware version when using this init file.");
+					break;
 			}
 		}
 
@@ -459,6 +493,14 @@ void MainContentComponent::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
         //[UserComboBoxCode_testBaudBox] -- add your combo box handling code here..
         //[/UserComboBoxCode_testBaudBox]
     }
+    else if (comboBoxThatHasChanged == qwiicBox)
+    {
+        //[UserComboBoxCode_qwiicBox] -- add your combo box handling code here..
+
+		Output->setQwiicAddress(qwiicBox->getSelectedId() - 1);
+
+        //[/UserComboBoxCode_qwiicBox]
+    }
 
     //[UsercomboBoxChanged_Post]
     //[/UsercomboBoxChanged_Post]
@@ -507,14 +549,20 @@ void MainContentComponent::setMode(int mode) {
 		case MODE_WAV_TRIGGER:
 			modeBox->setSelectedId(1, dontSendNotification);
 			baudBox->setItemEnabled(7, true);
+			qwiicBox->setSelectedId(20, dontSendNotification);
+			qwiicBox->setEnabled(false);
 			break;
 		case MODE_TSUNAMI_STEREO:
 			modeBox->setSelectedId(2, dontSendNotification);
 			baudBox->setItemEnabled(7, false);
+			qwiicBox->setSelectedId(20, dontSendNotification);
+			qwiicBox->setEnabled(true);
 			break;
 		case MODE_TSUNAMI_MONO:
 			modeBox->setSelectedId(3, dontSendNotification);
 			baudBox->setItemEnabled(7, false);
+			qwiicBox->setSelectedId(20, dontSendNotification);
+			qwiicBox->setEnabled(true);
 			break;
 	}
 }
@@ -537,6 +585,24 @@ int MainContentComponent::getBaud(void) {
 	return baudBox->getSelectedId();
 }
 
+// **************************************************************************
+// setQwiic
+// **************************************************************************
+bool MainContentComponent::setQwiic(int b) {
+
+	if (b <= qwiicBox->getNumItems())
+		qwiicBox->setSelectedId(b, dontSendNotification);
+	return true;
+}
+
+// **************************************************************************
+// getQwiic
+// **************************************************************************
+int MainContentComponent::getQwiic(void) {
+
+	return qwiicBox->getSelectedId();
+}
+
 //[/MiscUserCode]
 
 
@@ -555,7 +621,7 @@ BEGIN_JUCER_METADATA
                  fixedSize="1" initialWidth="1000" initialHeight="650">
   <BACKGROUND backgroundColour="ff323e44"/>
   <GROUPCOMPONENT name="new group" id="14c4978f91073b28" memberName="groupComponent"
-                  virtualName="" explicitFocusOrder="0" pos="25 176 284 159" title="Serial Com - Optional"/>
+                  virtualName="" explicitFocusOrder="0" pos="25 176 284 159" title="Remote Control - Optional"/>
   <TABBEDCOMPONENT name="new tabbed component" id="4f34a80be597580a" memberName="tabbedComponent"
                    virtualName="" explicitFocusOrder="0" pos="25Rr 20 642 316" orientation="top"
                    tabBarDepth="30" initialTab="0">
@@ -572,47 +638,47 @@ BEGIN_JUCER_METADATA
                     virtualName="" explicitFocusOrder="0" pos="25Rr -16R 642 296"
                     posRelativeY="4f34a80be597580a" class="OutputComponent" params=""/>
   <COMBOBOX name="mode combo box" id="e3c088efe12a9e2d" memberName="modeBox"
-            virtualName="" explicitFocusOrder="0" pos="120 80 161 24" tooltip="Select the target product and firmware version here.&#10;&#10;This choice will be retained the next time you start the application.&#10;"
+            virtualName="" explicitFocusOrder="0" pos="120 62 161 24" tooltip="Select the target product and firmware version here.&#10;&#10;This choice will be retained the next time you start the application.&#10;"
             editable="0" layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
   <GENERICCOMPONENT name="help windoe" id="1c1d2687ee1fe7b9" memberName="helpWindow"
                     virtualName="" explicitFocusOrder="0" pos="27 -16R 280 278" posRelativeY="4f34a80be597580a"
                     class="HelpComponent" params=""/>
   <LABEL name="new label" id="f921c4136acd3fe0" memberName="label" virtualName=""
-         explicitFocusOrder="0" pos="56 80 63 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="56 62 63 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Product&#10;" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15" kerning="0" bold="0" italic="0" justification="33"/>
   <COMBOBOX name="port combo box" id="5a63afb3bdb1eb76" memberName="portBox"
-            virtualName="" explicitFocusOrder="0" pos="88 211 192 24" tooltip="If you have a USB serial adaptor, such as an FTDI Basic, connected to the WAV Trigger or Tsunami, then selecting it here allows you to test trigger options directly, use the controls on the Remote Control tab and send live updates from the Audio Settings tab."
+            virtualName="" explicitFocusOrder="0" pos="88 217 192 24" tooltip="If you have a USB serial adaptor, such as an FTDI Basic, connected to the WAV Trigger or Tsunami, then selecting it here allows you to test trigger options directly, use the controls on the Remote Control tab and send live updates from the Audio Settings tab."
             editable="0" layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
   <LABEL name="new label" id="63ced89023ffec60" memberName="label2" virtualName=""
-         explicitFocusOrder="0" pos="43 211 40 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="43 217 40 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Port" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="33"/>
   <COMBOBOX name="baud combo box" id="46e2aa4abffad948" memberName="baudBox"
-            virtualName="" explicitFocusOrder="0" pos="171 120 110 24" tooltip="This is the  baudrate to be used by the serial control port on the WAV Trigger or Tsunami.&#10;&#10;For the WAV Trigger, selecting MIDI activates the MIDI protocol and forces the baud rate to 31.25k.&#10;&#10;Tsunami has a dedicated MIDI port, so both the serial control port and MIDI are always active."
+            virtualName="" explicitFocusOrder="0" pos="171 97 110 24" tooltip="This is the  baudrate to be used by the serial control port on the WAV Trigger or Tsunami.&#10;&#10;For the WAV Trigger, selecting MIDI activates the MIDI protocol and forces the baud rate to 31.25k.&#10;&#10;Tsunami has a dedicated MIDI port, so both the serial control port and MIDI are always active."
             editable="0" layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
   <LABEL name="new label" id="fbd34b4ee434fd5c" memberName="label3" virtualName=""
-         explicitFocusOrder="0" pos="96 120 72 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="96 97 72 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Baudrate" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="33"/>
   <COMBOBOX name="testBaud combo box" id="2787c4d6ab343a2a" memberName="testBaudBox"
-            virtualName="" explicitFocusOrder="0" pos="170 251 110 24" tooltip="This baudrate must match the baudrate currently in use by the serial control port on the WAV Trigger or Tsunami"
+            virtualName="" explicitFocusOrder="0" pos="170 253 110 24" tooltip="This baudrate must match the baudrate currently in use by the serial control port on the WAV Trigger or Tsunami"
             editable="0" layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
   <LABEL name="new label" id="d65667ae717c6adb" memberName="label4" virtualName=""
-         explicitFocusOrder="0" pos="96 251 72 24" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="96 253 72 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Baudrate" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          kerning="0" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="c6eccef35ea83c0b" memberName="label5" virtualName=""
          explicitFocusOrder="0" pos="22 36 106 24" textCol="ff6e50f3"
-         edTextCol="ff000000" edBkgCol="0" labelText="v2.00 beta2" editableSingleClick="0"
+         edTextCol="ff000000" edBkgCol="0" labelText="v2.10" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="18" kerning="0" bold="0" italic="0" justification="33"/>
   <TEXTBUTTON name="stop all button" id="5834a73e118659da" memberName="stopAllButton"
-              virtualName="" explicitFocusOrder="0" pos="56 291 80 24" tooltip="When serial communication is active, this sends a &quot;Stop All&quot; command to silence all audio"
+              virtualName="" explicitFocusOrder="0" pos="55 294 80 24" tooltip="When serial communication is active, this sends a &quot;Stop All&quot; command to silence all audio"
               buttonText="Stop All" connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <LABEL name="new label" id="17f23051607afa85" memberName="label6" virtualName=""
          explicitFocusOrder="0" pos="21 14 288 24" textCol="ff6e50f3"
@@ -620,6 +686,14 @@ BEGIN_JUCER_METADATA
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
          fontname="Default font" fontsize="20" kerning="0" bold="1" italic="0"
          justification="33" typefaceStyle="Bold"/>
+  <LABEL name="new label" id="aeaa73cf290750d0" memberName="label7" virtualName=""
+         explicitFocusOrder="0" pos="105 131 104 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Qwiic Address" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="15" kerning="0" bold="0" italic="0" justification="33"/>
+  <COMBOBOX name="baud combo box" id="5f3117ec1f650908" memberName="qwiicBox"
+            virtualName="" explicitFocusOrder="0" pos="210 132 70 24" tooltip="This is the address assigned to Tsunami for the Qwiic bus"
+            editable="0" layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

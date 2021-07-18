@@ -217,12 +217,12 @@ int val;
 
 	if (m_Com->isMsgReady()) {
 		msgLen = m_Com->getMessage(responseMsg);
-		m_Com->clearMsgReady();
 		if (msgLen > 0) {
 
 			switch (responseMsg[0]) {
 				case 0x81:
 					versionLabel->setText(String((char *)&responseMsg[1]), dontSendNotification);
+					m_Com->clearMsgReady();
 					break;
 
 				case 0x82:
@@ -231,6 +231,7 @@ int val;
 					val = (int)responseMsg[3];
 					val = (val << 8) + (int)responseMsg[2];
 					filesLabel->setText(String(val), dontSendNotification);
+					m_Com->clearMsgReady();
 					break;
 			}
 		}
