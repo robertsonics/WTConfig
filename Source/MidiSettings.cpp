@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Projucer version: 5.2.0
+  Created with Projucer version: 7.0.2
 
   ------------------------------------------------------------------------------
 
-  The Projucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright (c) 2015 - ROLI Ltd.
+  The Projucer is part of the JUCE library.
+  Copyright (c) 2020 - Raw Material Software Limited.
 
   ==============================================================================
 */
@@ -33,65 +33,89 @@ MidiSettings::MidiSettings ()
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
-    addAndMakeVisible (labelChan = new Label ("new label",
-                                              TRANS("Channel")));
-    labelChan->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    labelChan->setJustificationType (Justification::centredLeft);
+    labelChan.reset (new juce::Label ("new label",
+                                      TRANS("Channel")));
+    addAndMakeVisible (labelChan.get());
+    labelChan->setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    labelChan->setJustificationType (juce::Justification::centredLeft);
     labelChan->setEditable (false, false, false);
-    labelChan->setColour (TextEditor::textColourId, Colours::black);
-    labelChan->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    labelChan->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    labelChan->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (channelBox = new ComboBox ("channel combo box"));
+    labelChan->setBounds (96, 56, 64, 24);
+
+    channelBox.reset (new juce::ComboBox ("channel combo box"));
+    addAndMakeVisible (channelBox.get());
     channelBox->setTooltip (TRANS("This specifies the MIDI Channel number that the WAV Trigger or Tsunami will respond to.\n"
     "\n"
     "When set to \"Omni\", all MIDI messages will be honored, regardless of channel number.\n"));
     channelBox->setEditableText (false);
-    channelBox->setJustificationType (Justification::centredLeft);
-    channelBox->setTextWhenNothingSelected (String());
+    channelBox->setJustificationType (juce::Justification::centredLeft);
+    channelBox->setTextWhenNothingSelected (juce::String());
     channelBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     channelBox->addListener (this);
 
-    addAndMakeVisible (pitchBox = new ComboBox ("pitch combo box"));
+    channelBox->setBounds (160, 56, 112, 24);
+
+    pitchBox.reset (new juce::ComboBox ("pitch combo box"));
+    addAndMakeVisible (pitchBox.get());
     pitchBox->setTooltip (TRANS("The number of semi-tones up and down covered by the MIDI Pitch Bend message."));
     pitchBox->setEditableText (false);
-    pitchBox->setJustificationType (Justification::centredLeft);
-    pitchBox->setTextWhenNothingSelected (String());
+    pitchBox->setJustificationType (juce::Justification::centredLeft);
+    pitchBox->setTextWhenNothingSelected (juce::String());
     pitchBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     pitchBox->addListener (this);
 
-    addAndMakeVisible (labelPitch = new Label ("new label",
-                                               TRANS("Pitch Bend\n"
-                                               "Semitones")));
-    labelPitch->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    labelPitch->setJustificationType (Justification::centredLeft);
-    labelPitch->setEditable (false, false, false);
-    labelPitch->setColour (TextEditor::textColourId, Colours::black);
-    labelPitch->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    pitchBox->setBounds (440, 56, 70, 24);
 
-    addAndMakeVisible (releaseSlider = new Slider ("release slider"));
+    labelPitch.reset (new juce::Label ("new label",
+                                       TRANS("Pitch Bend\n"
+                                       "Semitones")));
+    addAndMakeVisible (labelPitch.get());
+    labelPitch->setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    labelPitch->setJustificationType (juce::Justification::centredLeft);
+    labelPitch->setEditable (false, false, false);
+    labelPitch->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    labelPitch->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
+
+    labelPitch->setBounds (352, 52, 79, 32);
+
+    releaseSlider.reset (new juce::Slider ("release slider"));
+    addAndMakeVisible (releaseSlider.get());
     releaseSlider->setTooltip (TRANS("This is the default release time, in milliseconds, for MIDI Note-Off events."));
     releaseSlider->setRange (0, 127, 1);
-    releaseSlider->setSliderStyle (Slider::LinearBar);
-    releaseSlider->setTextBoxStyle (Slider::TextBoxLeft, false, 80, 20);
+    releaseSlider->setSliderStyle (juce::Slider::LinearBar);
+    releaseSlider->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 80, 20);
     releaseSlider->addListener (this);
 
-    addAndMakeVisible (labelRelease = new Label ("new label",
-                                                 TRANS("Release Time")));
-    labelRelease->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    labelRelease->setJustificationType (Justification::centredLeft);
-    labelRelease->setEditable (false, false, false);
-    labelRelease->setColour (TextEditor::textColourId, Colours::black);
-    labelRelease->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    releaseSlider->setBounds (160, 112, 144, 24);
 
-    addAndMakeVisible (ignoreVelToggle = new ToggleButton ("ignore velocity toggle button"));
+    labelRelease.reset (new juce::Label ("new label",
+                                         TRANS("Release Time")));
+    addAndMakeVisible (labelRelease.get());
+    labelRelease->setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    labelRelease->setJustificationType (juce::Justification::centredLeft);
+    labelRelease->setEditable (false, false, false);
+    labelRelease->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    labelRelease->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
+
+    labelRelease->setBounds (64, 112, 96, 24);
+
+    ignoreVelToggle.reset (new juce::ToggleButton ("ignore velocity toggle button"));
+    addAndMakeVisible (ignoreVelToggle.get());
     ignoreVelToggle->setTooltip (TRANS("When checked, MIDI Note-On velocity will be ignored and audio will be played as if the volume is 127 (max)."));
     ignoreVelToggle->setButtonText (TRANS("Ignore Velocity"));
     ignoreVelToggle->addListener (this);
 
-    addAndMakeVisible (ignoreOffToggle = new ToggleButton ("ignore off toggle button"));
+    ignoreVelToggle->setBounds (128, 163, 136, 24);
+
+    ignoreOffToggle.reset (new juce::ToggleButton ("ignore off toggle button"));
+    addAndMakeVisible (ignoreOffToggle.get());
     ignoreOffToggle->setTooltip (TRANS("When checked, MIDI Note-Off messages will be ignored."));
     ignoreOffToggle->setButtonText (TRANS("Ignore Note-Off Messages"));
     ignoreOffToggle->addListener (this);
+
+    ignoreOffToggle->setBounds (328, 163, 200, 24);
 
 
     //[UserPreSize]
@@ -154,12 +178,12 @@ MidiSettings::~MidiSettings()
 }
 
 //==============================================================================
-void MidiSettings::paint (Graphics& g)
+void MidiSettings::paint (juce::Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
 
-    g.fillAll (Colour (0xff323e44));
+    g.fillAll (juce::Colour (0xff323e44));
 
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]
@@ -170,24 +194,16 @@ void MidiSettings::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    labelChan->setBounds (96, 56, 64, 24);
-    channelBox->setBounds (160, 56, 112, 24);
-    pitchBox->setBounds (440, 56, 70, 24);
-    labelPitch->setBounds (352, 52, 79, 32);
-    releaseSlider->setBounds (160, 112, 144, 24);
-    labelRelease->setBounds (64, 112, 96, 24);
-    ignoreVelToggle->setBounds (128, 163, 136, 24);
-    ignoreOffToggle->setBounds (328, 163, 200, 24);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
 
-void MidiSettings::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
+void MidiSettings::comboBoxChanged (juce::ComboBox* comboBoxThatHasChanged)
 {
     //[UsercomboBoxChanged_Pre]
     //[/UsercomboBoxChanged_Pre]
 
-    if (comboBoxThatHasChanged == channelBox)
+    if (comboBoxThatHasChanged == channelBox.get())
     {
         //[UserComboBoxCode_channelBox] -- add your combo box handling code here..
 
@@ -195,7 +211,7 @@ void MidiSettings::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 
         //[/UserComboBoxCode_channelBox]
     }
-    else if (comboBoxThatHasChanged == pitchBox)
+    else if (comboBoxThatHasChanged == pitchBox.get())
     {
         //[UserComboBoxCode_pitchBox] -- add your combo box handling code here..
 
@@ -208,12 +224,12 @@ void MidiSettings::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
     //[/UsercomboBoxChanged_Post]
 }
 
-void MidiSettings::sliderValueChanged (Slider* sliderThatWasMoved)
+void MidiSettings::sliderValueChanged (juce::Slider* sliderThatWasMoved)
 {
     //[UsersliderValueChanged_Pre]
     //[/UsersliderValueChanged_Pre]
 
-    if (sliderThatWasMoved == releaseSlider)
+    if (sliderThatWasMoved == releaseSlider.get())
     {
         //[UserSliderCode_releaseSlider] -- add your slider handling code here..
 
@@ -226,12 +242,12 @@ void MidiSettings::sliderValueChanged (Slider* sliderThatWasMoved)
     //[/UsersliderValueChanged_Post]
 }
 
-void MidiSettings::buttonClicked (Button* buttonThatWasClicked)
+void MidiSettings::buttonClicked (juce::Button* buttonThatWasClicked)
 {
     //[UserbuttonClicked_Pre]
     //[/UserbuttonClicked_Pre]
 
-    if (buttonThatWasClicked == ignoreVelToggle)
+    if (buttonThatWasClicked == ignoreVelToggle.get())
     {
         //[UserButtonCode_ignoreVelToggle] -- add your button handler code here..
 
@@ -246,7 +262,7 @@ void MidiSettings::buttonClicked (Button* buttonThatWasClicked)
 
         //[/UserButtonCode_ignoreVelToggle]
     }
-    else if (buttonThatWasClicked == ignoreOffToggle)
+    else if (buttonThatWasClicked == ignoreOffToggle.get())
     {
         //[UserButtonCode_ignoreOffToggle] -- add your button handler code here..
 
@@ -275,7 +291,7 @@ void MidiSettings::buttonClicked (Button* buttonThatWasClicked)
 // **************************************************************************
 void MidiSettings::setOutputComponent(OutputComponent * out) {
 
-	m_Output = (OutputComponent *)out;
+	m_Output = out;
 	if (m_Output != nullptr)
 		m_Output->setMidiSettings(this);
 }
@@ -448,8 +464,8 @@ BEGIN_JUCER_METADATA
   <LABEL name="new label" id="e16014cb46640e06" memberName="labelChan"
          virtualName="" explicitFocusOrder="0" pos="96 56 64 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Channel" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
-         kerning="0" bold="0" italic="0" justification="33"/>
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
+         kerning="0.0" bold="0" italic="0" justification="33"/>
   <COMBOBOX name="channel combo box" id="cf094937ff3dbeeb" memberName="channelBox"
             virtualName="" explicitFocusOrder="0" pos="160 56 112 24" tooltip="This specifies the MIDI Channel number that the WAV Trigger or Tsunami will respond to.&#10;&#10;When set to &quot;Omni&quot;, all MIDI messages will be honored, regardless of channel number.&#10;"
             editable="0" layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
@@ -460,17 +476,17 @@ BEGIN_JUCER_METADATA
          virtualName="" explicitFocusOrder="0" pos="352 52 79 32" edTextCol="ff000000"
          edBkgCol="0" labelText="Pitch Bend&#10;Semitones" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="15" kerning="0" bold="0" italic="0" justification="33"/>
+         fontsize="15.0" kerning="0.0" bold="0" italic="0" justification="33"/>
   <SLIDER name="release slider" id="4b9884c187ca3df6" memberName="releaseSlider"
           virtualName="" explicitFocusOrder="0" pos="160 112 144 24" tooltip="This is the default release time, in milliseconds, for MIDI Note-Off events."
-          min="0" max="127" int="1" style="LinearBar" textBoxPos="TextBoxLeft"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"
+          min="0.0" max="127.0" int="1.0" style="LinearBar" textBoxPos="TextBoxLeft"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1.0"
           needsCallback="1"/>
   <LABEL name="new label" id="a933557e36752428" memberName="labelRelease"
          virtualName="" explicitFocusOrder="0" pos="64 112 96 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Release Time" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="15" kerning="0" bold="0" italic="0" justification="33"/>
+         fontsize="15.0" kerning="0.0" bold="0" italic="0" justification="33"/>
   <TOGGLEBUTTON name="ignore velocity toggle button" id="c585dad81e0ee63a" memberName="ignoreVelToggle"
                 virtualName="" explicitFocusOrder="0" pos="128 163 136 24" tooltip="When checked, MIDI Note-On velocity will be ignored and audio will be played as if the volume is 127 (max)."
                 buttonText="Ignore Velocity" connectedEdges="0" needsCallback="1"
@@ -488,3 +504,4 @@ END_JUCER_METADATA
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
+

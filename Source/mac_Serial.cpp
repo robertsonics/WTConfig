@@ -5,9 +5,8 @@
 // Updated for current Juce API 8/1/13 Marc Lindahl
 //
 
-#include "../JuceLibraryCode/JuceHeader.h"
 
-#if JUCE_MAC
+#if defined (__APPLE_CPP__) || defined (__APPLE_CC__)
 
 #include <stdio.h>
 #include <sys/ioctl.h>
@@ -18,6 +17,8 @@
 #include <IOKit/IOBSD.h>
 #include <IOKit/storage/IOCDTypes.h>
 #include <IOKit/serial/ioss.h>
+
+#include "../JuceLibraryCode/JuceHeader.h"
 
 #include "Serial.h"
 

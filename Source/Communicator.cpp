@@ -96,7 +96,7 @@ String portID = "\\\\.\\";
 	if (i >= 0) {
 		portID += portName.substring(i, i+5);
 		if (portID.contains(")"))
-			portID = portID.substring(0, 8);
+			portID = portID.dropLastCharacters(1);
 	}
 	pSP = new SerialPort(portID, SerialPortConfig(57600, 8, SerialPortConfig::SERIALPORT_PARITY_NONE, SerialPortConfig::STOPBITS_1, SerialPortConfig::FLOWCONTROL_NONE));
 

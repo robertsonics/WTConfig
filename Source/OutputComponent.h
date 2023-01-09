@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Projucer version: 5.2.0
+  Created with Projucer version: 7.0.2
 
   ------------------------------------------------------------------------------
 
-  The Projucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright (c) 2015 - ROLI Ltd.
+  The Projucer is part of the JUCE library.
+  Copyright (c) 2020 - Raw Material Software Limited.
 
   ==============================================================================
 */
@@ -41,12 +41,12 @@ class MainContentComponent;
                                                                     //[/Comments]
 */
 class OutputComponent  : public Component,
-                         public Button::Listener
+                         public juce::Button::Listener
 {
 public:
     //==============================================================================
     OutputComponent ();
-    ~OutputComponent();
+    ~OutputComponent() override;
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
@@ -84,9 +84,9 @@ public:
 
     //[/UserMethods]
 
-    void paint (Graphics& g) override;
+    void paint (juce::Graphics& g) override;
     void resized() override;
-    void buttonClicked (Button* buttonThatWasClicked) override;
+    void buttonClicked (juce::Button* buttonThatWasClicked) override;
 
 
 
@@ -104,11 +104,11 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<TextEditor> textEditor;
-    ScopedPointer<TextButton> OpenButton;
-    ScopedPointer<TextButton> SaveButton;
-    ScopedPointer<TextButton> NewButton;
-    ScopedPointer<TextButton> HelpButton;
+    std::unique_ptr<juce::TextEditor> textEditor;
+    std::unique_ptr<juce::TextButton> OpenButton;
+    std::unique_ptr<juce::TextButton> SaveButton;
+    std::unique_ptr<juce::TextButton> NewButton;
+    std::unique_ptr<juce::TextButton> HelpButton;
 
 
     //==============================================================================
@@ -117,3 +117,4 @@ private:
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
+

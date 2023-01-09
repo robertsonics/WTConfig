@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Projucer version: 5.2.0
+  Created with Projucer version: 7.0.2
 
   ------------------------------------------------------------------------------
 
-  The Projucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright (c) 2015 - ROLI Ltd.
+  The Projucer is part of the JUCE library.
+  Copyright (c) 2020 - Raw Material Software Limited.
 
   ==============================================================================
 */
@@ -40,7 +40,8 @@ TriggerSettings::TriggerSettings ()
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
-    addAndMakeVisible (triggerBox = new ComboBox ("trigger combo box"));
+    triggerBox.reset (new juce::ComboBox ("trigger combo box"));
+    addAndMakeVisible (triggerBox.get());
     triggerBox->setTooltip (TRANS("This is the trigger number you are editing.\n"
     "\n"
     "If you select a trigger that already has an entry in the init file, it will show the current settings.\n"
@@ -49,42 +50,54 @@ TriggerSettings::TriggerSettings ()
     "\n"
     "Triggers that use the default settings don\'t need an entry in the init file.\n"));
     triggerBox->setEditableText (false);
-    triggerBox->setJustificationType (Justification::centredLeft);
-    triggerBox->setTextWhenNothingSelected (String());
+    triggerBox->setJustificationType (juce::Justification::centredLeft);
+    triggerBox->setTextWhenNothingSelected (juce::String());
     triggerBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     triggerBox->addListener (this);
 
-    addAndMakeVisible (interfaceBox = new ComboBox ("interface combo box"));
+    triggerBox->setBounds (40, 40, 72, 24);
+
+    interfaceBox.reset (new juce::ComboBox ("interface combo box"));
+    addAndMakeVisible (interfaceBox.get());
     interfaceBox->setTooltip (TRANS("Contact Closure: Use this when connecting the trigger to buttons and switches.\n"
     "\n"
     "Active: Use this when connecting the trigger to a digital output."));
     interfaceBox->setEditableText (false);
-    interfaceBox->setJustificationType (Justification::centredLeft);
-    interfaceBox->setTextWhenNothingSelected (String());
+    interfaceBox->setJustificationType (juce::Justification::centredLeft);
+    interfaceBox->setTextWhenNothingSelected (juce::String());
     interfaceBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     interfaceBox->addListener (this);
 
-    addAndMakeVisible (typeBox = new ComboBox ("type combo box"));
+    interfaceBox->setBounds (136, 40, 160, 24);
+
+    typeBox.reset (new juce::ComboBox ("type combo box"));
+    addAndMakeVisible (typeBox.get());
     typeBox->setTooltip (TRANS("Edge: Trigger activates on a level change. High-to-low if \"Invert\" is not selected, low-to-high if \"Invert\" is checked.\n"
     "\n"
     "Level: Trigger remains active as long as level is maintained. Low if \"Invert\" is not selected, high if \"Invert\" is checked.\n"
     "\n"
     "Latched: Same as Edge, but remains active until something else stops the triggered event.\n"));
     typeBox->setEditableText (false);
-    typeBox->setJustificationType (Justification::centredLeft);
-    typeBox->setTextWhenNothingSelected (String());
+    typeBox->setJustificationType (juce::Justification::centredLeft);
+    typeBox->setTextWhenNothingSelected (juce::String());
     typeBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     typeBox->addListener (this);
 
-    addAndMakeVisible (functionBox = new ComboBox ("function combo box"));
+    typeBox->setBounds (320, 40, 96, 24);
+
+    functionBox.reset (new juce::ComboBox ("function combo box"));
+    addAndMakeVisible (functionBox.get());
     functionBox->setTooltip (TRANS("This selects which function the trigger performs. Please see the User Guide for a description of the available functions."));
     functionBox->setEditableText (false);
-    functionBox->setJustificationType (Justification::centredLeft);
-    functionBox->setTextWhenNothingSelected (String());
+    functionBox->setJustificationType (juce::Justification::centredLeft);
+    functionBox->setTextWhenNothingSelected (juce::String());
     functionBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     functionBox->addListener (this);
 
-    addAndMakeVisible (invertToggle = new ToggleButton ("invert toggle button"));
+    functionBox->setBounds (440, 40, 160, 24);
+
+    invertToggle.reset (new juce::ToggleButton ("invert toggle button"));
+    addAndMakeVisible (invertToggle.get());
     invertToggle->setTooltip (TRANS("This inverts the logic level of the trigger input.\n"
     "\n"
     "Normal active level is \"low\", so that connecting a trigger input through a push-button to ground causes the trigger to be active when the button is pushed.\n"
@@ -93,62 +106,89 @@ TriggerSettings::TriggerSettings ()
     invertToggle->setButtonText (TRANS("Invert"));
     invertToggle->addListener (this);
 
-    addAndMakeVisible (retriggerToggle = new ToggleButton ("retrigger toggle button"));
+    invertToggle->setBounds (37, 88, 80, 24);
+
+    retriggerToggle.reset (new juce::ToggleButton ("retrigger toggle button"));
+    addAndMakeVisible (retriggerToggle.get());
     retriggerToggle->setTooltip (TRANS("Checking this allows the trigger to restart an event if the previously triggered event is not finished.\n"
     "\n"
     "For example, unchecking this prevents the trigger from restarting a track if that track is still playing."));
     retriggerToggle->setButtonText (TRANS("Re-Trigger"));
     retriggerToggle->addListener (this);
 
-    addAndMakeVisible (polyToggle = new ToggleButton ("poly toggle button"));
+    retriggerToggle->setBounds (128, 88, 104, 24);
+
+    polyToggle.reset (new juce::ToggleButton ("poly toggle button"));
+    addAndMakeVisible (polyToggle.get());
     polyToggle->setTooltip (TRANS("When checked, this causes tracks to be mixed with tracks that are already playing.\n"
     "\n"
     "Unchecking this will cause the trigger to stop all other tracks when starting a new track.\n"));
     polyToggle->setButtonText (TRANS("Polyphonic"));
     polyToggle->addListener (this);
 
-    addAndMakeVisible (loopToggle = new ToggleButton ("loop toggle button"));
+    polyToggle->setBounds (248, 88, 104, 24);
+
+    loopToggle.reset (new juce::ToggleButton ("loop toggle button"));
+    addAndMakeVisible (loopToggle.get());
     loopToggle->setTooltip (TRANS("When checked, this causes the track to loop continuously until stopped by some other event.\n"
     "\n"
     "Note that Tsunami will loop seamlessly from the last sample in the track to the first, whereas the WAV Trigger will always have a very small gap at the loop point."));
     loopToggle->setButtonText (TRANS("Loop"));
     loopToggle->addListener (this);
 
-    addAndMakeVisible (lockToggle = new ToggleButton ("lock toggle button"));
+    loopToggle->setBounds (368, 88, 72, 24);
+
+    lockToggle.reset (new juce::ToggleButton ("lock toggle button"));
+    addAndMakeVisible (lockToggle.get());
     lockToggle->setTooltip (TRANS("When checked, the voice used for this trigger will not be \"stolen\" if all voices are being used and a new track needs to be played."));
     lockToggle->setButtonText (TRANS("Lock Voice"));
     lockToggle->addListener (this);
 
-    addAndMakeVisible (trigVolSlider = new Slider ("trigger volume slider"));
+    lockToggle->setBounds (36, 129, 104, 24);
+
+    trigVolSlider.reset (new juce::Slider ("trigger volume slider"));
+    addAndMakeVisible (trigVolSlider.get());
     trigVolSlider->setTooltip (TRANS("Tracks started by this trigger will have this gain applied to them. This is in addition to, and prior to, any gain applied to the specified output."));
     trigVolSlider->setRange (-20, 10, 1);
-    trigVolSlider->setSliderStyle (Slider::LinearBar);
-    trigVolSlider->setTextBoxStyle (Slider::TextBoxLeft, false, 80, 20);
+    trigVolSlider->setSliderStyle (juce::Slider::LinearBar);
+    trigVolSlider->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 80, 20);
     trigVolSlider->addListener (this);
 
-    addAndMakeVisible (outputBox = new ComboBox ("output combo box"));
+    trigVolSlider->setBounds (176, 172, 150, 24);
+
+    outputBox.reset (new juce::ComboBox ("output combo box"));
+    addAndMakeVisible (outputBox.get());
     outputBox->setTooltip (TRANS("For trigger functions that play audio, this is the output to which the audio will be routed.\n"
     "\n"
     "The WAV Trigger only has one stereo output, so it will always be 1.\n"
     "\n"
     "Tsunami Mono has 8 mono outputs, while Tsunami Stereo has 4 stereo output pairs.\n"));
     outputBox->setEditableText (false);
-    outputBox->setJustificationType (Justification::centredLeft);
-    outputBox->setTextWhenNothingSelected (String());
+    outputBox->setJustificationType (juce::Justification::centredLeft);
+    outputBox->setTextWhenNothingSelected (juce::String());
     outputBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     outputBox->addListener (this);
 
-    addAndMakeVisible (resetButton = new TextButton ("reset button"));
+    outputBox->setBounds (512, 172, 86, 24);
+
+    resetButton.reset (new juce::TextButton ("reset button"));
+    addAndMakeVisible (resetButton.get());
     resetButton->setTooltip (TRANS("This resets the trigger options to default."));
     resetButton->setButtonText (TRANS("Reset"));
     resetButton->addListener (this);
 
-    addAndMakeVisible (addButton = new TextButton ("add button"));
+    resetButton->setBounds (40, 232, 80, 24);
+
+    addButton.reset (new juce::TextButton ("add button"));
+    addAndMakeVisible (addButton.get());
     addButton->setTooltip (TRANS("This adds the trigger, with the current settings, to the init file below."));
     addButton->setButtonText (TRANS("Add"));
     addButton->addListener (this);
 
-    addAndMakeVisible (lowText = new TextEditor ("low text editor"));
+    addButton->setBounds (136, 232, 80, 24);
+
+    lowText.reset (new juce::TextEditor ("low text editor"));
+    addAndMakeVisible (lowText.get());
     lowText->setTooltip (TRANS("The lowest track number in the range affected by the trigger."));
     lowText->setMultiLine (false);
     lowText->setReturnKeyStartsNewLine (false);
@@ -156,9 +196,12 @@ TriggerSettings::TriggerSettings ()
     lowText->setScrollbarsShown (true);
     lowText->setCaretVisible (true);
     lowText->setPopupMenuEnabled (true);
-    lowText->setText (String());
+    lowText->setText (juce::String());
 
-    addAndMakeVisible (highText = new TextEditor ("high text editor"));
+    lowText->setBounds (464, 112, 48, 24);
+
+    highText.reset (new juce::TextEditor ("high text editor"));
+    addAndMakeVisible (highText.get());
     highText->setTooltip (TRANS("The highest track number in the range affected by the trigger."));
     highText->setMultiLine (false);
     highText->setReturnKeyStartsNewLine (false);
@@ -166,89 +209,125 @@ TriggerSettings::TriggerSettings ()
     highText->setScrollbarsShown (true);
     highText->setCaretVisible (true);
     highText->setPopupMenuEnabled (true);
-    highText->setText (String());
+    highText->setText (juce::String());
 
-    addAndMakeVisible (label = new Label ("new label",
-                                          TRANS("Trigger")));
-    label->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    label->setJustificationType (Justification::centredLeft);
+    highText->setBounds (552, 112, 48, 24);
+
+    label.reset (new juce::Label ("new label",
+                                  TRANS("Trigger")));
+    addAndMakeVisible (label.get());
+    label->setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    label->setJustificationType (juce::Justification::centredLeft);
     label->setEditable (false, false, false);
-    label->setColour (TextEditor::textColourId, Colours::black);
-    label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (label2 = new Label ("new label",
-                                           TRANS("Hardware Interface")));
-    label2->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    label2->setJustificationType (Justification::centredLeft);
+    label->setBounds (36, 16, 55, 24);
+
+    label2.reset (new juce::Label ("new label",
+                                   TRANS("Hardware Interface")));
+    addAndMakeVisible (label2.get());
+    label2->setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    label2->setJustificationType (juce::Justification::centredLeft);
     label2->setEditable (false, false, false);
-    label2->setColour (TextEditor::textColourId, Colours::black);
-    label2->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    label2->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    label2->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (label3 = new Label ("new label",
-                                           TRANS("Type")));
-    label3->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    label3->setJustificationType (Justification::centredLeft);
+    label2->setBounds (130, 16, 135, 24);
+
+    label3.reset (new juce::Label ("new label",
+                                   TRANS("Type")));
+    addAndMakeVisible (label3.get());
+    label3->setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    label3->setJustificationType (juce::Justification::centredLeft);
     label3->setEditable (false, false, false);
-    label3->setColour (TextEditor::textColourId, Colours::black);
-    label3->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    label3->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    label3->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (label4 = new Label ("new label",
-                                           TRANS("Function")));
-    label4->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    label4->setJustificationType (Justification::centredLeft);
+    label3->setBounds (315, 16, 47, 24);
+
+    label4.reset (new juce::Label ("new label",
+                                   TRANS("Function")));
+    addAndMakeVisible (label4.get());
+    label4->setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    label4->setJustificationType (juce::Justification::centredLeft);
     label4->setEditable (false, false, false);
-    label4->setColour (TextEditor::textColourId, Colours::black);
-    label4->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    label4->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    label4->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (volLabel = new Label ("new label",
-                                             TRANS("Trigger Volume (dB)")));
-    volLabel->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    volLabel->setJustificationType (Justification::centredLeft);
+    label4->setBounds (435, 16, 63, 24);
+
+    volLabel.reset (new juce::Label ("new label",
+                                     TRANS("Trigger Volume (dB)")));
+    addAndMakeVisible (volLabel.get());
+    volLabel->setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    volLabel->setJustificationType (juce::Justification::centredLeft);
     volLabel->setEditable (false, false, false);
-    volLabel->setColour (TextEditor::textColourId, Colours::black);
-    volLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    volLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    volLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (rangeLabel1 = new Label ("new label",
-                                                TRANS("Track Range")));
+    volLabel->setBounds (36, 172, 143, 24);
+
+    rangeLabel1.reset (new juce::Label ("new label",
+                                        TRANS("Track Range")));
+    addAndMakeVisible (rangeLabel1.get());
     rangeLabel1->setTooltip (TRANS("Many trigger functions operate over a range of tracks. When using such a function, these fields allow you to specify the range."));
-    rangeLabel1->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    rangeLabel1->setJustificationType (Justification::centredLeft);
+    rangeLabel1->setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    rangeLabel1->setJustificationType (juce::Justification::centredLeft);
     rangeLabel1->setEditable (false, false, false);
-    rangeLabel1->setColour (TextEditor::textColourId, Colours::black);
-    rangeLabel1->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    rangeLabel1->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    rangeLabel1->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (rangeLabel2 = new Label ("new label",
-                                                TRANS("to")));
-    rangeLabel2->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    rangeLabel2->setJustificationType (Justification::centredLeft);
+    rangeLabel1->setBounds (460, 88, 95, 24);
+
+    rangeLabel2.reset (new juce::Label ("new label",
+                                        TRANS("to")));
+    addAndMakeVisible (rangeLabel2.get());
+    rangeLabel2->setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    rangeLabel2->setJustificationType (juce::Justification::centredLeft);
     rangeLabel2->setEditable (false, false, false);
-    rangeLabel2->setColour (TextEditor::textColourId, Colours::black);
-    rangeLabel2->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    rangeLabel2->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    rangeLabel2->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (outLabel = new Label ("out label",
-                                             TRANS("Stereo Output")));
-    outLabel->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    outLabel->setJustificationType (Justification::centredLeft);
+    rangeLabel2->setBounds (520, 112, 23, 24);
+
+    outLabel.reset (new juce::Label ("out label",
+                                     TRANS("Stereo Output")));
+    addAndMakeVisible (outLabel.get());
+    outLabel->setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    outLabel->setJustificationType (juce::Justification::centredLeft);
     outLabel->setEditable (false, false, false);
-    outLabel->setColour (TextEditor::textColourId, Colours::black);
-    outLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    outLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    outLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (updateButton = new TextButton ("update button"));
+    outLabel->setBounds (408, 171, 103, 24);
+
+    updateButton.reset (new juce::TextButton ("update button"));
+    addAndMakeVisible (updateButton.get());
     updateButton->setTooltip (TRANS("If the trigger already has an entry in the init file below, this button updates the entry with the currently displayed options.\n"));
     updateButton->setButtonText (TRANS("Update"));
     updateButton->addListener (this);
 
-    addAndMakeVisible (deleteButton = new TextButton ("delete button"));
+    updateButton->setBounds (232, 232, 80, 24);
+
+    deleteButton.reset (new juce::TextButton ("delete button"));
+    addAndMakeVisible (deleteButton.get());
     deleteButton->setTooltip (TRANS("This removes the current trigger from the init file below."));
     deleteButton->setButtonText (TRANS("Delete"));
     deleteButton->addListener (this);
 
-    addAndMakeVisible (copyButton = new TextButton ("copy button"));
+    deleteButton->setBounds (328, 232, 80, 24);
+
+    copyButton.reset (new juce::TextButton ("copy button"));
+    addAndMakeVisible (copyButton.get());
     copyButton->setTooltip (TRANS("This copies the current trigger settings to the next sequential trigger number and adds a corresponding entry to the init file below.\n"));
     copyButton->setButtonText (TRANS("Copy"));
     copyButton->addListener (this);
 
-    addAndMakeVisible (testButton = new TextButton ("test button"));
+    copyButton->setBounds (424, 232, 80, 24);
+
+    testButton.reset (new juce::TextButton ("test button"));
+    addAndMakeVisible (testButton.get());
     testButton->setTooltip (TRANS("When serial communication is active, this will send the settings for the currently selected trigger to the WAV Tirgger or Tsunami. The settings for this trigger become active immediately.\n"
     "\n"
     "This allows you to try out the effect of different trigger options without have to write and swap a microSD card.\n"
@@ -256,6 +335,8 @@ TriggerSettings::TriggerSettings ()
     "This button is not active when there is no serial device selected.\n"));
     testButton->setButtonText (TRANS("Test"));
     testButton->addListener (this);
+
+    testButton->setBounds (520, 232, 80, 24);
 
 
     //[UserPreSize]
@@ -377,12 +458,12 @@ TriggerSettings::~TriggerSettings()
 }
 
 //==============================================================================
-void TriggerSettings::paint (Graphics& g)
+void TriggerSettings::paint (juce::Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
 
-    g.fillAll (Colour (0xff323e44));
+    g.fillAll (juce::Colour (0xff323e44));
 
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]
@@ -393,43 +474,16 @@ void TriggerSettings::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    triggerBox->setBounds (40, 40, 72, 24);
-    interfaceBox->setBounds (136, 40, 160, 24);
-    typeBox->setBounds (320, 40, 96, 24);
-    functionBox->setBounds (440, 40, 160, 24);
-    invertToggle->setBounds (37, 88, 80, 24);
-    retriggerToggle->setBounds (128, 88, 104, 24);
-    polyToggle->setBounds (248, 88, 104, 24);
-    loopToggle->setBounds (368, 88, 72, 24);
-    lockToggle->setBounds (36, 129, 104, 24);
-    trigVolSlider->setBounds (176, 172, 150, 24);
-    outputBox->setBounds (512, 172, 86, 24);
-    resetButton->setBounds (40, 232, 80, 24);
-    addButton->setBounds (136, 232, 80, 24);
-    lowText->setBounds (464, 112, 48, 24);
-    highText->setBounds (552, 112, 48, 24);
-    label->setBounds (36, 16, 55, 24);
-    label2->setBounds (130, 16, 135, 24);
-    label3->setBounds (315, 16, 47, 24);
-    label4->setBounds (435, 16, 63, 24);
-    volLabel->setBounds (36, 172, 143, 24);
-    rangeLabel1->setBounds (460, 88, 95, 24);
-    rangeLabel2->setBounds (520, 112, 23, 24);
-    outLabel->setBounds (408, 171, 103, 24);
-    updateButton->setBounds (232, 232, 80, 24);
-    deleteButton->setBounds (328, 232, 80, 24);
-    copyButton->setBounds (424, 232, 80, 24);
-    testButton->setBounds (520, 232, 80, 24);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
 
-void TriggerSettings::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
+void TriggerSettings::comboBoxChanged (juce::ComboBox* comboBoxThatHasChanged)
 {
     //[UsercomboBoxChanged_Pre]
     //[/UsercomboBoxChanged_Pre]
 
-    if (comboBoxThatHasChanged == triggerBox)
+    if (comboBoxThatHasChanged == triggerBox.get())
     {
         //[UserComboBoxCode_triggerBox] -- add your combo box handling code here..
 
@@ -466,7 +520,7 @@ void TriggerSettings::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 
         //[/UserComboBoxCode_triggerBox]
     }
-    else if (comboBoxThatHasChanged == interfaceBox)
+    else if (comboBoxThatHasChanged == interfaceBox.get())
     {
         //[UserComboBoxCode_interfaceBox] -- add your combo box handling code here..
 
@@ -482,7 +536,7 @@ void TriggerSettings::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 
         //[/UserComboBoxCode_interfaceBox]
     }
-    else if (comboBoxThatHasChanged == typeBox)
+    else if (comboBoxThatHasChanged == typeBox.get())
     {
         //[UserComboBoxCode_typeBox] -- add your combo box handling code here..
 
@@ -510,7 +564,7 @@ void TriggerSettings::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 
         //[/UserComboBoxCode_typeBox]
     }
-    else if (comboBoxThatHasChanged == functionBox)
+    else if (comboBoxThatHasChanged == functionBox.get())
     {
         //[UserComboBoxCode_functionBox] -- add your combo box handling code here..
 
@@ -633,7 +687,7 @@ void TriggerSettings::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 
         //[/UserComboBoxCode_functionBox]
     }
-    else if (comboBoxThatHasChanged == outputBox)
+    else if (comboBoxThatHasChanged == outputBox.get())
     {
         //[UserComboBoxCode_outputBox] -- add your combo box handling code here..
         //[/UserComboBoxCode_outputBox]
@@ -643,37 +697,37 @@ void TriggerSettings::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
     //[/UsercomboBoxChanged_Post]
 }
 
-void TriggerSettings::buttonClicked (Button* buttonThatWasClicked)
+void TriggerSettings::buttonClicked (juce::Button* buttonThatWasClicked)
 {
     //[UserbuttonClicked_Pre]
     //[/UserbuttonClicked_Pre]
 
-    if (buttonThatWasClicked == invertToggle)
+    if (buttonThatWasClicked == invertToggle.get())
     {
         //[UserButtonCode_invertToggle] -- add your button handler code here..
         //[/UserButtonCode_invertToggle]
     }
-    else if (buttonThatWasClicked == retriggerToggle)
+    else if (buttonThatWasClicked == retriggerToggle.get())
     {
         //[UserButtonCode_retriggerToggle] -- add your button handler code here..
         //[/UserButtonCode_retriggerToggle]
     }
-    else if (buttonThatWasClicked == polyToggle)
+    else if (buttonThatWasClicked == polyToggle.get())
     {
         //[UserButtonCode_polyToggle] -- add your button handler code here..
         //[/UserButtonCode_polyToggle]
     }
-    else if (buttonThatWasClicked == loopToggle)
+    else if (buttonThatWasClicked == loopToggle.get())
     {
         //[UserButtonCode_loopToggle] -- add your button handler code here..
         //[/UserButtonCode_loopToggle]
     }
-    else if (buttonThatWasClicked == lockToggle)
+    else if (buttonThatWasClicked == lockToggle.get())
     {
         //[UserButtonCode_lockToggle] -- add your button handler code here..
         //[/UserButtonCode_lockToggle]
     }
-    else if (buttonThatWasClicked == resetButton)
+    else if (buttonThatWasClicked == resetButton.get())
     {
         //[UserButtonCode_resetButton] -- add your button handler code here..
 
@@ -681,7 +735,7 @@ void TriggerSettings::buttonClicked (Button* buttonThatWasClicked)
 
         //[/UserButtonCode_resetButton]
     }
-    else if (buttonThatWasClicked == addButton)
+    else if (buttonThatWasClicked == addButton.get())
     {
         //[UserButtonCode_addButton] -- add your button handler code here..
 
@@ -699,7 +753,7 @@ void TriggerSettings::buttonClicked (Button* buttonThatWasClicked)
 
         //[/UserButtonCode_addButton]
     }
-    else if (buttonThatWasClicked == updateButton)
+    else if (buttonThatWasClicked == updateButton.get())
     {
         //[UserButtonCode_updateButton] -- add your button handler code here..
 
@@ -717,7 +771,7 @@ void TriggerSettings::buttonClicked (Button* buttonThatWasClicked)
 
         //[/UserButtonCode_updateButton]
     }
-    else if (buttonThatWasClicked == deleteButton)
+    else if (buttonThatWasClicked == deleteButton.get())
     {
         //[UserButtonCode_deleteButton] -- add your button handler code here..
 
@@ -734,7 +788,7 @@ void TriggerSettings::buttonClicked (Button* buttonThatWasClicked)
 
         //[/UserButtonCode_deleteButton]
     }
-    else if (buttonThatWasClicked == copyButton)
+    else if (buttonThatWasClicked == copyButton.get())
     {
         //[UserButtonCode_copyButton] -- add your button handler code here..
 
@@ -762,7 +816,7 @@ void TriggerSettings::buttonClicked (Button* buttonThatWasClicked)
 
         //[/UserButtonCode_copyButton]
     }
-    else if (buttonThatWasClicked == testButton)
+    else if (buttonThatWasClicked == testButton.get())
     {
         //[UserButtonCode_testButton] -- add your button handler code here..
 
@@ -776,12 +830,12 @@ void TriggerSettings::buttonClicked (Button* buttonThatWasClicked)
     //[/UserbuttonClicked_Post]
 }
 
-void TriggerSettings::sliderValueChanged (Slider* sliderThatWasMoved)
+void TriggerSettings::sliderValueChanged (juce::Slider* sliderThatWasMoved)
 {
     //[UsersliderValueChanged_Pre]
     //[/UsersliderValueChanged_Pre]
 
-    if (sliderThatWasMoved == trigVolSlider)
+    if (sliderThatWasMoved == trigVolSlider.get())
     {
         //[UserSliderCode_trigVolSlider] -- add your slider handling code here..
         //[/UserSliderCode_trigVolSlider]
@@ -800,7 +854,7 @@ void TriggerSettings::sliderValueChanged (Slider* sliderThatWasMoved)
 // **************************************************************************
 void TriggerSettings::setOutputComponent(OutputComponent * out) {
 
-	m_Output = (OutputComponent *)out;
+	m_Output = out;
 	if (m_Output != nullptr)
 		m_Output->setTriggerSettings(this);
 }
@@ -1210,8 +1264,8 @@ BEGIN_JUCER_METADATA
                 radioGroupId="0" state="0"/>
   <SLIDER name="trigger volume slider" id="8032589c2a49d56" memberName="trigVolSlider"
           virtualName="" explicitFocusOrder="0" pos="176 172 150 24" tooltip="Tracks started by this trigger will have this gain applied to them. This is in addition to, and prior to, any gain applied to the specified output."
-          min="-20" max="10" int="1" style="LinearBar" textBoxPos="TextBoxLeft"
-          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"
+          min="-20.0" max="10.0" int="1.0" style="LinearBar" textBoxPos="TextBoxLeft"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1.0"
           needsCallback="1"/>
   <COMBOBOX name="output combo box" id="54bcceb309d9f156" memberName="outputBox"
             virtualName="" explicitFocusOrder="0" pos="512 172 86 24" tooltip="For trigger functions that play audio, this is the output to which the audio will be routed.&#10;&#10;The WAV Trigger only has one stereo output, so it will always be 1.&#10;&#10;Tsunami Mono has 8 mono outputs, while Tsunami Stereo has 4 stereo output pairs.&#10;"
@@ -1233,43 +1287,43 @@ BEGIN_JUCER_METADATA
   <LABEL name="new label" id="56dcd8347f4032db" memberName="label" virtualName=""
          explicitFocusOrder="0" pos="36 16 55 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Trigger" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
-         kerning="0" bold="0" italic="0" justification="33"/>
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
+         kerning="0.0" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="c820293b78e3f85c" memberName="label2" virtualName=""
          explicitFocusOrder="0" pos="130 16 135 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Hardware Interface" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="15" kerning="0" bold="0" italic="0" justification="33"/>
+         fontsize="15.0" kerning="0.0" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="c076b6b0ab3b71fa" memberName="label3" virtualName=""
          explicitFocusOrder="0" pos="315 16 47 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Type" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
-         kerning="0" bold="0" italic="0" justification="33"/>
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
+         kerning="0.0" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="68c5b9f533a193a6" memberName="label4" virtualName=""
          explicitFocusOrder="0" pos="435 16 63 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Function" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
-         kerning="0" bold="0" italic="0" justification="33"/>
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
+         kerning="0.0" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="15663c134920e4fd" memberName="volLabel"
          virtualName="" explicitFocusOrder="0" pos="36 172 143 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Trigger Volume (dB)" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="15" kerning="0" bold="0" italic="0" justification="33"/>
+         fontsize="15.0" kerning="0.0" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="a7c91b8ca6e74d62" memberName="rangeLabel1"
          virtualName="" explicitFocusOrder="0" pos="460 88 95 24" tooltip="Many trigger functions operate over a range of tracks. When using such a function, these fields allow you to specify the range."
          edTextCol="ff000000" edBkgCol="0" labelText="Track Range" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="15" kerning="0" bold="0" italic="0" justification="33"/>
+         fontsize="15.0" kerning="0.0" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="fb4a2374b9f9fa31" memberName="rangeLabel2"
          virtualName="" explicitFocusOrder="0" pos="520 112 23 24" edTextCol="ff000000"
          edBkgCol="0" labelText="to" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
-         kerning="0" bold="0" italic="0" justification="33"/>
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
+         kerning="0.0" bold="0" italic="0" justification="33"/>
   <LABEL name="out label" id="a93404467a4f24d2" memberName="outLabel"
          virtualName="" explicitFocusOrder="0" pos="408 171 103 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Stereo Output" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="15" kerning="0" bold="0" italic="0" justification="33"/>
+         fontsize="15.0" kerning="0.0" bold="0" italic="0" justification="33"/>
   <TEXTBUTTON name="update button" id="428f68e12e66a9d2" memberName="updateButton"
               virtualName="" explicitFocusOrder="0" pos="232 232 80 24" tooltip="If the trigger already has an entry in the init file below, this button updates the entry with the currently displayed options.&#10;"
               buttonText="Update" connectedEdges="0" needsCallback="1" radioGroupId="0"/>
@@ -1294,3 +1348,4 @@ END_JUCER_METADATA
 #pragma warning( pop )
 
 //[/EndFile]
+

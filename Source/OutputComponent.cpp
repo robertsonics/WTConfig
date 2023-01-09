@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Projucer version: 5.2.0
+  Created with Projucer version: 7.0.2
 
   ------------------------------------------------------------------------------
 
-  The Projucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright (c) 2015 - ROLI Ltd.
+  The Projucer is part of the JUCE library.
+  Copyright (c) 2020 - Raw Material Software Limited.
 
   ==============================================================================
 */
@@ -36,41 +36,46 @@ OutputComponent::OutputComponent ()
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
-    addAndMakeVisible (textEditor = new TextEditor ("new text editor"));
+    textEditor.reset (new juce::TextEditor ("new text editor"));
+    addAndMakeVisible (textEditor.get());
     textEditor->setMultiLine (true);
     textEditor->setReturnKeyStartsNewLine (true);
     textEditor->setReadOnly (false);
     textEditor->setScrollbarsShown (true);
     textEditor->setCaretVisible (true);
     textEditor->setPopupMenuEnabled (true);
-    textEditor->setColour (TextEditor::textColourId, Colours::black);
-    textEditor->setColour (TextEditor::backgroundColourId, Colours::white);
-    textEditor->setText (String());
+    textEditor->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    textEditor->setColour (juce::TextEditor::backgroundColourId, juce::Colours::white);
+    textEditor->setText (juce::String());
 
-    addAndMakeVisible (OpenButton = new TextButton ("openButton"));
+    OpenButton.reset (new juce::TextButton ("openButton"));
+    addAndMakeVisible (OpenButton.get());
     OpenButton->setTooltip (TRANS("Open an existing init file."));
     OpenButton->setButtonText (TRANS("Open"));
-    OpenButton->setConnectedEdges (Button::ConnectedOnLeft | Button::ConnectedOnRight | Button::ConnectedOnTop | Button::ConnectedOnBottom);
+    OpenButton->setConnectedEdges (juce::Button::ConnectedOnLeft | juce::Button::ConnectedOnRight | juce::Button::ConnectedOnTop | juce::Button::ConnectedOnBottom);
     OpenButton->addListener (this);
 
-    addAndMakeVisible (SaveButton = new TextButton ("saveButton"));
+    SaveButton.reset (new juce::TextButton ("saveButton"));
+    addAndMakeVisible (SaveButton.get());
     SaveButton->setTooltip (TRANS("Save the current init file."));
     SaveButton->setButtonText (TRANS("Save"));
-    SaveButton->setConnectedEdges (Button::ConnectedOnLeft | Button::ConnectedOnRight | Button::ConnectedOnTop | Button::ConnectedOnBottom);
+    SaveButton->setConnectedEdges (juce::Button::ConnectedOnLeft | juce::Button::ConnectedOnRight | juce::Button::ConnectedOnTop | juce::Button::ConnectedOnBottom);
     SaveButton->addListener (this);
 
-    addAndMakeVisible (NewButton = new TextButton ("newButton"));
+    NewButton.reset (new juce::TextButton ("newButton"));
+    addAndMakeVisible (NewButton.get());
     NewButton->setTooltip (TRANS("Discard all the current settings and reset to default.\n"
     "\n"
     "This won\'t affect any init file you\'ve saved, but you will lose all of your current settings."));
     NewButton->setButtonText (TRANS("New"));
-    NewButton->setConnectedEdges (Button::ConnectedOnLeft | Button::ConnectedOnRight | Button::ConnectedOnTop | Button::ConnectedOnBottom);
+    NewButton->setConnectedEdges (juce::Button::ConnectedOnLeft | juce::Button::ConnectedOnRight | juce::Button::ConnectedOnTop | juce::Button::ConnectedOnBottom);
     NewButton->addListener (this);
 
-    addAndMakeVisible (HelpButton = new TextButton ("helpButton"));
+    HelpButton.reset (new juce::TextButton ("helpButton"));
+    addAndMakeVisible (HelpButton.get());
     HelpButton->setTooltip (TRANS("Links to the on-line User Guide for the selected product."));
     HelpButton->setButtonText (TRANS("Help"));
-    HelpButton->setConnectedEdges (Button::ConnectedOnLeft | Button::ConnectedOnRight | Button::ConnectedOnTop | Button::ConnectedOnBottom);
+    HelpButton->setConnectedEdges (juce::Button::ConnectedOnLeft | juce::Button::ConnectedOnRight | juce::Button::ConnectedOnTop | juce::Button::ConnectedOnBottom);
     HelpButton->addListener (this);
 
 
@@ -113,12 +118,12 @@ OutputComponent::~OutputComponent()
 }
 
 //==============================================================================
-void OutputComponent::paint (Graphics& g)
+void OutputComponent::paint (juce::Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
 
-    g.fillAll (Colour (0xff323e44));
+    g.fillAll (juce::Colour (0xff323e44));
 
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]
@@ -129,21 +134,21 @@ void OutputComponent::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    textEditor->setBounds (0, 0, proportionOfWidth (1.0000f), proportionOfHeight (0.8006f));
-    OpenButton->setBounds (0, 0 + proportionOfHeight (0.8006f) - -41 - 24, 80, 24);
-    SaveButton->setBounds (96, 0 + proportionOfHeight (0.8006f) - -41 - 24, 80, 24);
-    NewButton->setBounds (192, 0 + proportionOfHeight (0.8006f) - -41 - 24, 80, 24);
-    HelpButton->setBounds (getWidth() - 80, 0 + proportionOfHeight (0.8006f) - -41 - 24, 80, 24);
+    textEditor->setBounds (0, 0, proportionOfWidth (1.0000f), proportionOfHeight (0.8014f));
+    OpenButton->setBounds (0, 0 + proportionOfHeight (0.8014f) - -41 - 24, 80, 24);
+    SaveButton->setBounds (96, 0 + proportionOfHeight (0.8014f) - -41 - 24, 80, 24);
+    NewButton->setBounds (192, 0 + proportionOfHeight (0.8014f) - -41 - 24, 80, 24);
+    HelpButton->setBounds (getWidth() - 80, 0 + proportionOfHeight (0.8014f) - -41 - 24, 80, 24);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
 
-void OutputComponent::buttonClicked (Button* buttonThatWasClicked)
+void OutputComponent::buttonClicked (juce::Button* buttonThatWasClicked)
 {
     //[UserbuttonClicked_Pre]
     //[/UserbuttonClicked_Pre]
 
-    if (buttonThatWasClicked == OpenButton)
+    if (buttonThatWasClicked == OpenButton.get())
     {
         //[UserButtonCode_OpenButton] -- add your button handler code here..
 
@@ -155,16 +160,15 @@ void OutputComponent::buttonClicked (Button* buttonThatWasClicked)
 			File file = fc.getResult();
 
 			m_initStrings.clear();
-			FileInputStream * inStream = file.createInputStream();
+			FileInputStream inStream(file);
 			String line;
 			do {
-				line = inStream->readNextLine();
+				line = inStream.readNextLine();
 				if (line.length() > 0) {
 					line += newLine;
 					m_initStrings.add(line);
 				}
 			} while (line.length() > 0);
-			delete inStream;
 			updateInitWindow();
 			m_trigSettings->resetTrigger();
 			m_midiSettings->reset();
@@ -176,7 +180,7 @@ void OutputComponent::buttonClicked (Button* buttonThatWasClicked)
 
         //[/UserButtonCode_OpenButton]
     }
-    else if (buttonThatWasClicked == SaveButton)
+    else if (buttonThatWasClicked == SaveButton.get())
     {
         //[UserButtonCode_SaveButton] -- add your button handler code here..
 
@@ -194,16 +198,15 @@ void OutputComponent::buttonClicked (Button* buttonThatWasClicked)
 			if (file.exists())
 				file.deleteFile();
 			if (file.create()) {
-				FileOutputStream * outStream = file.createOutputStream();
-				outStream->writeText(textEditor->getText(), 0, 0);
-				outStream->writeText(newLine, 0, 0);
-				delete outStream;
+				FileOutputStream outStream(file);
+				outStream.writeText(textEditor->getText(), 0, 0, nullptr);
+				outStream.writeText(newLine, 0, 0, nullptr);
 			}
 		}
 
         //[/UserButtonCode_SaveButton]
     }
-    else if (buttonThatWasClicked == NewButton)
+    else if (buttonThatWasClicked == NewButton.get())
     {
         //[UserButtonCode_NewButton] -- add your button handler code here..
 
@@ -216,7 +219,7 @@ void OutputComponent::buttonClicked (Button* buttonThatWasClicked)
 
         //[/UserButtonCode_NewButton]
     }
-    else if (buttonThatWasClicked == HelpButton)
+    else if (buttonThatWasClicked == HelpButton.get())
     {
         //[UserButtonCode_HelpButton] -- add your button handler code here..
         //[/UserButtonCode_HelpButton]
@@ -272,7 +275,7 @@ void OutputComponent::resetOutput(void) {
 			m_initStrings.clear();
 			m_initStrings.add("******************************************************************");
 			m_initStrings.add(newLine);
-			m_initStrings.add("This file was generated by the Robertsonics Configurator v2.10");
+			m_initStrings.add("This file was generated by the Robertsonics Configurator v2.20");
 			m_initStrings.add(newLine);
 			m_initStrings.add("for use with the WAV Trigger firmware. It is only required if");
 			m_initStrings.add(newLine);
@@ -285,7 +288,7 @@ void OutputComponent::resetOutput(void) {
 			m_initStrings.add("#TSUM\n");
 			m_initStrings.add("******************************************************************");
 			m_initStrings.add(newLine);
-			m_initStrings.add("This file was generated by the Robertsonics Configurator v2.10");
+			m_initStrings.add("This file was generated by the Robertsonics Configurator v2.20");
 			m_initStrings.add(newLine);
 			m_initStrings.add("for use with the Tsunami Mono firmware. It is only required if");
 			m_initStrings.add(newLine);
@@ -298,7 +301,7 @@ void OutputComponent::resetOutput(void) {
 			m_initStrings.add("#TSUS\n");
 			m_initStrings.add("******************************************************************");
 			m_initStrings.add(newLine);
-			m_initStrings.add("This file was generated by the Robertsonics Configurator v2.10");
+			m_initStrings.add("This file was generated by the Robertsonics Configurator v2.20");
 			m_initStrings.add(newLine);
 			m_initStrings.add("for use with the Tsunami Stereo firmware. It is only required if");
 			m_initStrings.add(newLine);
@@ -358,7 +361,7 @@ void OutputComponent::refreshSettings(void) {
 			int a = getFirstValue(n);
 			if (a < 128)
 				m_globalSettings->setQwiic(a + 1);
-		}	
+		}
 
 		else if (m_initStrings[n].startsWith("#MIDI")) {
 			m_midiSettings->setFlags(getFirstValue(n));
@@ -1123,7 +1126,7 @@ BEGIN_JUCER_METADATA
                  fixedSize="0" initialWidth="600" initialHeight="400">
   <BACKGROUND backgroundColour="ff323e44"/>
   <TEXTEDITOR name="new text editor" id="53becc30770e98fb" memberName="textEditor"
-              virtualName="" explicitFocusOrder="0" pos="0 0 100% 80.061%"
+              virtualName="" explicitFocusOrder="0" pos="0 0 100% 80.137%"
               textcol="ff000000" bkgcol="ffffffff" initialText="" multiline="1"
               retKeyStartsLine="1" readonly="0" scrollbars="1" caret="1" popupmenu="1"/>
   <TEXTBUTTON name="openButton" id="712853fb9fda4107" memberName="OpenButton"
@@ -1151,3 +1154,4 @@ END_JUCER_METADATA
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
+

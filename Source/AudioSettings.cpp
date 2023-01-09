@@ -527,7 +527,7 @@ void AudioSettings::buttonClicked (Button* buttonThatWasClicked)
 // **************************************************************************
 void AudioSettings::setOutputComponent(OutputComponent * out) {
 
-	m_Output = (OutputComponent *)out;
+	m_Output = out;
 	if (m_Output != nullptr)
 		m_Output->setAudioSettings(this);
 }

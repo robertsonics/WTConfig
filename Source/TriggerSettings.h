@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Projucer version: 5.2.0
+  Created with Projucer version: 7.0.2
 
   ------------------------------------------------------------------------------
 
-  The Projucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright (c) 2015 - ROLI Ltd.
+  The Projucer is part of the JUCE library.
+  Copyright (c) 2020 - Raw Material Software Limited.
 
   ==============================================================================
 */
@@ -39,20 +39,21 @@ class Communicator;
                                                                     //[/Comments]
 */
 class TriggerSettings  : public Component,
-                         public ComboBox::Listener,
-                         public Button::Listener,
-                         public Slider::Listener
+                         public juce::ComboBox::Listener,
+                         public juce::Button::Listener,
+                         public juce::Slider::Listener
 {
 public:
     //==============================================================================
     TriggerSettings ();
-    ~TriggerSettings();
+    ~TriggerSettings() override;
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
 
-	void setOutputComponent(OutputComponent * out);
-	void setCommunicator(Communicator * com);
+	//void setOutputComponent(OutputComponent * out);
+    void setOutputComponent(OutputComponent * out);
+    void setCommunicator(Communicator * com);
 	void resetTrigger(void);
 	void setMode(int mode);
 	void refreshTrigger(void);
@@ -64,11 +65,11 @@ public:
 
     //[/UserMethods]
 
-    void paint (Graphics& g) override;
+    void paint (juce::Graphics& g) override;
     void resized() override;
-    void comboBoxChanged (ComboBox* comboBoxThatHasChanged) override;
-    void buttonClicked (Button* buttonThatWasClicked) override;
-    void sliderValueChanged (Slider* sliderThatWasMoved) override;
+    void comboBoxChanged (juce::ComboBox* comboBoxThatHasChanged) override;
+    void buttonClicked (juce::Button* buttonThatWasClicked) override;
+    void sliderValueChanged (juce::Slider* sliderThatWasMoved) override;
 
 
 
@@ -84,33 +85,33 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<ComboBox> triggerBox;
-    ScopedPointer<ComboBox> interfaceBox;
-    ScopedPointer<ComboBox> typeBox;
-    ScopedPointer<ComboBox> functionBox;
-    ScopedPointer<ToggleButton> invertToggle;
-    ScopedPointer<ToggleButton> retriggerToggle;
-    ScopedPointer<ToggleButton> polyToggle;
-    ScopedPointer<ToggleButton> loopToggle;
-    ScopedPointer<ToggleButton> lockToggle;
-    ScopedPointer<Slider> trigVolSlider;
-    ScopedPointer<ComboBox> outputBox;
-    ScopedPointer<TextButton> resetButton;
-    ScopedPointer<TextButton> addButton;
-    ScopedPointer<TextEditor> lowText;
-    ScopedPointer<TextEditor> highText;
-    ScopedPointer<Label> label;
-    ScopedPointer<Label> label2;
-    ScopedPointer<Label> label3;
-    ScopedPointer<Label> label4;
-    ScopedPointer<Label> volLabel;
-    ScopedPointer<Label> rangeLabel1;
-    ScopedPointer<Label> rangeLabel2;
-    ScopedPointer<Label> outLabel;
-    ScopedPointer<TextButton> updateButton;
-    ScopedPointer<TextButton> deleteButton;
-    ScopedPointer<TextButton> copyButton;
-    ScopedPointer<TextButton> testButton;
+    std::unique_ptr<juce::ComboBox> triggerBox;
+    std::unique_ptr<juce::ComboBox> interfaceBox;
+    std::unique_ptr<juce::ComboBox> typeBox;
+    std::unique_ptr<juce::ComboBox> functionBox;
+    std::unique_ptr<juce::ToggleButton> invertToggle;
+    std::unique_ptr<juce::ToggleButton> retriggerToggle;
+    std::unique_ptr<juce::ToggleButton> polyToggle;
+    std::unique_ptr<juce::ToggleButton> loopToggle;
+    std::unique_ptr<juce::ToggleButton> lockToggle;
+    std::unique_ptr<juce::Slider> trigVolSlider;
+    std::unique_ptr<juce::ComboBox> outputBox;
+    std::unique_ptr<juce::TextButton> resetButton;
+    std::unique_ptr<juce::TextButton> addButton;
+    std::unique_ptr<juce::TextEditor> lowText;
+    std::unique_ptr<juce::TextEditor> highText;
+    std::unique_ptr<juce::Label> label;
+    std::unique_ptr<juce::Label> label2;
+    std::unique_ptr<juce::Label> label3;
+    std::unique_ptr<juce::Label> label4;
+    std::unique_ptr<juce::Label> volLabel;
+    std::unique_ptr<juce::Label> rangeLabel1;
+    std::unique_ptr<juce::Label> rangeLabel2;
+    std::unique_ptr<juce::Label> outLabel;
+    std::unique_ptr<juce::TextButton> updateButton;
+    std::unique_ptr<juce::TextButton> deleteButton;
+    std::unique_ptr<juce::TextButton> copyButton;
+    std::unique_ptr<juce::TextButton> testButton;
 
 
     //==============================================================================
@@ -119,3 +120,4 @@ private:
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
+

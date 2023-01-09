@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Projucer version: 5.2.0
+  Created with Projucer version: 7.0.2
 
   ------------------------------------------------------------------------------
 
-  The Projucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright (c) 2015 - ROLI Ltd.
+  The Projucer is part of the JUCE library.
+  Copyright (c) 2020 - Raw Material Software Limited.
 
   ==============================================================================
 */
@@ -35,63 +35,84 @@ RemoteControl::RemoteControl ()
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
-    addAndMakeVisible (getInfoButton = new TextButton ("get info button"));
+    getInfoButton.reset (new juce::TextButton ("get info button"));
+    addAndMakeVisible (getInfoButton.get());
     getInfoButton->setTooltip (TRANS("This button will fetch and display the connected products version string, number of voices available and the number of tracks on the installed microSD card.\n"
     "\n"
     "This button is not available if there is no active serial port open or available."));
     getInfoButton->setButtonText (TRANS("Get Info"));
     getInfoButton->addListener (this);
 
-    addAndMakeVisible (versionLabel = new Label ("version label",
-                                                 String()));
-    versionLabel->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    versionLabel->setJustificationType (Justification::centredLeft);
+    getInfoButton->setBounds (40, 32, 80, 24);
+
+    versionLabel.reset (new juce::Label ("version label",
+                                         juce::String()));
+    addAndMakeVisible (versionLabel.get());
+    versionLabel->setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    versionLabel->setJustificationType (juce::Justification::centredLeft);
     versionLabel->setEditable (false, false, false);
-    versionLabel->setColour (Label::backgroundColourId, Colour (0xff797777));
-    versionLabel->setColour (TextEditor::textColourId, Colours::black);
-    versionLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    versionLabel->setColour (juce::Label::backgroundColourId, juce::Colour (0xff797777));
+    versionLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    versionLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (voicesLabel = new Label ("version label",
-                                                String()));
-    voicesLabel->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    voicesLabel->setJustificationType (Justification::centredLeft);
+    versionLabel->setBounds (192, 32, 184, 24);
+
+    voicesLabel.reset (new juce::Label ("version label",
+                                        juce::String()));
+    addAndMakeVisible (voicesLabel.get());
+    voicesLabel->setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    voicesLabel->setJustificationType (juce::Justification::centredLeft);
     voicesLabel->setEditable (false, false, false);
-    voicesLabel->setColour (Label::backgroundColourId, Colour (0xff797777));
-    voicesLabel->setColour (TextEditor::textColourId, Colours::black);
-    voicesLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    voicesLabel->setColour (juce::Label::backgroundColourId, juce::Colour (0xff797777));
+    voicesLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    voicesLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (filesLabel = new Label ("version label",
-                                               String()));
-    filesLabel->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    filesLabel->setJustificationType (Justification::centredLeft);
+    voicesLabel->setBounds (512, 32, 56, 24);
+
+    filesLabel.reset (new juce::Label ("version label",
+                                       juce::String()));
+    addAndMakeVisible (filesLabel.get());
+    filesLabel->setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    filesLabel->setJustificationType (juce::Justification::centredLeft);
     filesLabel->setEditable (false, false, false);
-    filesLabel->setColour (Label::backgroundColourId, Colour (0xff797777));
-    filesLabel->setColour (TextEditor::textColourId, Colours::black);
-    filesLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    filesLabel->setColour (juce::Label::backgroundColourId, juce::Colour (0xff797777));
+    filesLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    filesLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (label = new Label ("new label",
-                                          TRANS("Version")));
-    label->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    label->setJustificationType (Justification::centredLeft);
+    filesLabel->setBounds (512, 64, 56, 24);
+
+    label.reset (new juce::Label ("new label",
+                                  TRANS("Version")));
+    addAndMakeVisible (label.get());
+    label->setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    label->setJustificationType (juce::Justification::centredLeft);
     label->setEditable (false, false, false);
-    label->setColour (TextEditor::textColourId, Colours::black);
-    label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (label2 = new Label ("new label",
-                                           TRANS("Number of Voices")));
-    label2->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    label2->setJustificationType (Justification::centredLeft);
+    label->setBounds (133, 32, 63, 24);
+
+    label2.reset (new juce::Label ("new label",
+                                   TRANS("Number of Voices")));
+    addAndMakeVisible (label2.get());
+    label2->setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    label2->setJustificationType (juce::Justification::centredLeft);
     label2->setEditable (false, false, false);
-    label2->setColour (TextEditor::textColourId, Colours::black);
-    label2->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    label2->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    label2->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (label3 = new Label ("new label",
-                                           TRANS("Number of Tracks on microSD Card")));
-    label3->setFont (Font (15.00f, Font::plain).withTypefaceStyle ("Regular"));
-    label3->setJustificationType (Justification::centredLeft);
+    label2->setBounds (389, 32, 120, 24);
+
+    label3.reset (new juce::Label ("new label",
+                                   TRANS("Number of Tracks on microSD Card")));
+    addAndMakeVisible (label3.get());
+    label3->setFont (juce::Font (15.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
+    label3->setJustificationType (juce::Justification::centredLeft);
     label3->setEditable (false, false, false);
-    label3->setColour (TextEditor::textColourId, Colours::black);
-    label3->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    label3->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    label3->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
+
+    label3->setBounds (280, 64, 231, 24);
 
 
     //[UserPreSize]
@@ -131,12 +152,12 @@ RemoteControl::~RemoteControl()
 }
 
 //==============================================================================
-void RemoteControl::paint (Graphics& g)
+void RemoteControl::paint (juce::Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
 
-    g.fillAll (Colour (0xff323e44));
+    g.fillAll (juce::Colour (0xff323e44));
 
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]
@@ -147,23 +168,16 @@ void RemoteControl::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    getInfoButton->setBounds (40, 32, 80, 24);
-    versionLabel->setBounds (192, 32, 184, 24);
-    voicesLabel->setBounds (512, 32, 56, 24);
-    filesLabel->setBounds (512, 64, 56, 24);
-    label->setBounds (133, 32, 63, 24);
-    label2->setBounds (389, 32, 120, 24);
-    label3->setBounds (280, 64, 231, 24);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
 
-void RemoteControl::buttonClicked (Button* buttonThatWasClicked)
+void RemoteControl::buttonClicked (juce::Button* buttonThatWasClicked)
 {
     //[UserbuttonClicked_Pre]
     //[/UserbuttonClicked_Pre]
 
-    if (buttonThatWasClicked == getInfoButton)
+    if (buttonThatWasClicked == getInfoButton.get())
     {
         //[UserButtonCode_getInfoButton] -- add your button handler code here..
 
@@ -262,32 +276,32 @@ BEGIN_JUCER_METADATA
          virtualName="" explicitFocusOrder="0" pos="192 32 184 24" bkgCol="ff797777"
          edTextCol="ff000000" edBkgCol="0" labelText="" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="15" kerning="0" bold="0" italic="0" justification="33"/>
+         fontsize="15.0" kerning="0.0" bold="0" italic="0" justification="33"/>
   <LABEL name="version label" id="7cd695f0d5dc47e4" memberName="voicesLabel"
          virtualName="" explicitFocusOrder="0" pos="512 32 56 24" bkgCol="ff797777"
          edTextCol="ff000000" edBkgCol="0" labelText="" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="15" kerning="0" bold="0" italic="0" justification="33"/>
+         fontsize="15.0" kerning="0.0" bold="0" italic="0" justification="33"/>
   <LABEL name="version label" id="298c824447f349eb" memberName="filesLabel"
          virtualName="" explicitFocusOrder="0" pos="512 64 56 24" bkgCol="ff797777"
          edTextCol="ff000000" edBkgCol="0" labelText="" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="15" kerning="0" bold="0" italic="0" justification="33"/>
+         fontsize="15.0" kerning="0.0" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="f4b6b19603d822a3" memberName="label" virtualName=""
          explicitFocusOrder="0" pos="133 32 63 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Version" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="15"
-         kerning="0" bold="0" italic="0" justification="33"/>
+         focusDiscardsChanges="0" fontname="Default font" fontsize="15.0"
+         kerning="0.0" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="1668074f0bca3a9d" memberName="label2" virtualName=""
          explicitFocusOrder="0" pos="389 32 120 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Number of Voices" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="15" kerning="0" bold="0" italic="0" justification="33"/>
+         fontsize="15.0" kerning="0.0" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="6eeef82bdf130ffc" memberName="label3" virtualName=""
          explicitFocusOrder="0" pos="280 64 231 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Number of Tracks on microSD Card" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="15" kerning="0" bold="0" italic="0" justification="33"/>
+         fontsize="15.0" kerning="0.0" bold="0" italic="0" justification="33"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
@@ -297,3 +311,4 @@ END_JUCER_METADATA
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
+
