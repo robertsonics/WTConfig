@@ -146,7 +146,7 @@ MainContentComponent::MainContentComponent ()
     label4->setBounds (96, 253, 72, 24);
 
     label5.reset (new juce::Label ("new label",
-                                   TRANS("v2.20")));
+                                   TRANS("v2.21")));
     addAndMakeVisible (label5.get());
     label5->setFont (juce::Font (16.00f, juce::Font::plain).withTypefaceStyle ("Regular"));
     label5->setJustificationType (juce::Justification::centredLeft);
@@ -441,6 +441,51 @@ void MainContentComponent::comboBoxChanged (juce::ComboBox* comboBoxThatHasChang
     if (comboBoxThatHasChanged == modeBox.get())
     {
         //[UserComboBoxCode_modeBox] -- add your combo box handling code here..
+
+		bool d = AlertWindow::showOkCancelBox(AlertWindow::InfoIcon, "Warning!",
+			"Changing the mode will reset everything to default");
+
+		if (!d) {
+			modeBox->setSelectedId(m_mode + 1, dontSendNotification);
+		}
+
+		else {
+			m_mode = modeBox->getSelectedId() - 1;
+			output->setMode(m_mode);
+			output->resetOutput();
+			trigSettings->setMode(m_mode);
+			trigSettings->resetTrigger();
+			midiSettings->setMode(m_mode);
+			midiSettings->reset();
+			audioSettings->setMode(m_mode);
+			audioSettings->reset();
+			pCom->setMode(m_mode);
+			baudBox->setSelectedId(6);
+			qwiicBox->setSelectedId(20);
+
+			switch (m_mode) {
+				case MODE_WAV_TRIGGER:
+					midiSettings->disable();
+					baudBox->setItemEnabled(7, true);
+					qwiicBox->setEnabled(false);
+					AlertWindow::showMessageBoxAsync(AlertWindow::InfoIcon, "Mode Changed to WAV Trigger",
+						"Make sure you're running the WAV Trigger firmware when using this init file.");
+					break;
+				case MODE_TSUNAMI_STEREO:
+					baudBox->setItemEnabled(7, false);
+					qwiicBox->setEnabled(true);
+					AlertWindow::showMessageBoxAsync(AlertWindow::InfoIcon, "Mode Changed to Tsunami Stereo",
+						"Make sure you're running the Tsunami stereo firmware version when using this init file.");
+					break;
+				case MODE_TSUNAMI_MONO:
+					baudBox->setItemEnabled(7, false);
+					qwiicBox->setEnabled(true);
+					AlertWindow::showMessageBoxAsync(AlertWindow::InfoIcon, "Mode Changed to Tsunami Mono",
+						"Make sure you're running the Tsunami mono firmware version when using this init file.");
+					break;
+			}
+		}
+
         //[/UserComboBoxCode_modeBox]
     }
     else if (comboBoxThatHasChanged == portBox.get())
@@ -473,6 +518,16 @@ void MainContentComponent::comboBoxChanged (juce::ComboBox* comboBoxThatHasChang
     else if (comboBoxThatHasChanged == baudBox.get())
     {
         //[UserComboBoxCode_baudBox] -- add your combo box handling code here..
+
+		output->setSerialBaud(baudBox->getSelectedId());
+		if (m_mode == MODE_WAV_TRIGGER) {
+			midiSettings->reset();
+			if (baudBox->getSelectedId() == 7)
+				midiSettings->enable();
+			else
+				midiSettings->disable();
+		}
+
         //[/UserComboBoxCode_baudBox]
     }
     else if (comboBoxThatHasChanged == testBaudBox.get())
@@ -483,6 +538,9 @@ void MainContentComponent::comboBoxChanged (juce::ComboBox* comboBoxThatHasChang
     else if (comboBoxThatHasChanged == qwiicBox.get())
     {
         //[UserComboBoxCode_qwiicBox] -- add your combo box handling code here..
+
+		output->setQwiicAddress(qwiicBox->getSelectedId() - 1);
+
         //[/UserComboBoxCode_qwiicBox]
     }
 
@@ -660,7 +718,7 @@ BEGIN_JUCER_METADATA
          kerning="0.0" bold="0" italic="0" justification="33"/>
   <LABEL name="new label" id="c6eccef35ea83c0b" memberName="label5" virtualName=""
          explicitFocusOrder="0" pos="22 46 58 24" textCol="ff6e50f3" edTextCol="ff000000"
-         edBkgCol="0" labelText="v2.20" editableSingleClick="0" editableDoubleClick="0"
+         edBkgCol="0" labelText="v2.21" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="16.0"
          kerning="0.0" bold="0" italic="0" justification="33"/>
   <TEXTBUTTON name="stop all button" id="5834a73e118659da" memberName="stopAllButton"
